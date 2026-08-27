@@ -1,14 +1,14 @@
 {
   "builds": [
     {
-      "src": "main.py",
+      "src": "voice_agent_project/main.py",
       "use": "@vercel/python"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "main.py"
+      "dest": "voice_agent_project/main.py"
     }
   ]
 }
