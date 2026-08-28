@@ -11,11 +11,18 @@ from google import genai  # Official Google GenAI SDK
 
 app = FastAPI(title="Abdur AI Universal Assistant")
 
-# Absolute Paths Setup (Never fails regardless of terminal directory)
+# Absolute Paths Setup
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+# Vercel Serverless File System Adaptation (/tmp is writable on Vercel)
+if os.environ.get("VERCEL"):
+    DB_FILE = "/tmp/chat_database.db"
+    UPLOAD_DIR = "/tmp/uploads"
+else:
+    DB_FILE = os.path.join(BASE_DIR, "chat_database.db")
+    UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
+
 # Uploads Directory Setup
-UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
@@ -24,9 +31,7 @@ STATIC_DIR = os.path.join(BASE_DIR, "static")
 os.makedirs(STATIC_DIR, exist_ok=True)
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
-DB_FILE = os.path.join(BASE_DIR, "chat_database.db")
-
-# Load Gemini API Key safely from environment variables (Secure for GitHub & Cloud)
+# Load Gemini API Key safely from environment variables
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 
 try:
