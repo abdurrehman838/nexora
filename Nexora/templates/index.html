@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexora — Your Intelligent AI Assistant</title>
+    <link rel="icon" href="/static/logo.png?v=3">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #161616; color: #e3ded8; font-family: Georgia, Cambria, "Times New Roman", Times, serif; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #332e2b; border-radius: 3px; }
+        .markdown-content ul { list-style-type: disc; padding-left: 1.25rem; margin: 0.5rem 0; }
+        .markdown-content ol { list-style-type: decimal; padding-left: 1.25rem; margin: 0.5rem 0; }
+        .markdown-content li { margin: 0.25rem 0; }
+        .markdown-content p { margin-bottom: 0.5rem; white-space: pre-wrap; }
+        .markdown-content strong { color: #f4f2ef; font-weight: 600; }
+        .markdown-content h3 { font-size: 1.1rem; font-weight: 600; margin-top: 0.75rem; margin-bottom: 0.25rem; }
+        pre { background: #11100f !important; padding: 1rem; border-radius: 0.5rem; border: 1px solid #332e2b; overflow-x: auto; position: relative; margin: 0.75rem 0; }
+        code { font-family: monospace; font-size: 0.85rem; color: #f4f2ef; }
+        .copy-btn { position: absolute; top: 0.5rem; right: 0.5rem; background: #262220; color: #a8a19b; border: 1px solid #3d3633; padding: 0.25rem 0.5rem; font-size: 0.75rem; border-radius: 0.25rem; cursor: pointer; transition: all 0.2s; }
+        .copy-btn:hover { background: #c2653d; color: #fff; }
+        
+        /* Updated Textarea Styling */
+        textarea {
+            resize: none;
+            overflow-y: hidden;
+            min-height: 24px;
+            max-height: 150px;
+        }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <aside class="w-72 bg-[#121110] border-r border-[#262321] flex flex-col justify-between p-4">
+        <div>
+            <div class="mb-6 px-2 pt-2 border-b border-[#262321] pb-4 flex items-center gap-3">
+                <img src="/static/logo.png" alt="Nexora Logo" class="w-9 h-9 object-contain">
+                <div>
+                    <h1 class="text-xl font-bold tracking-wide text-[#f4f2ef]">Nexora</h1>
+                    <p class="text-xs text-[#8c827a] mt-0.5 font-sans">Your Intelligent AI Assistant</p>
+                </div>
+            </div>
+            
+            <button id="new-chat-btn" onclick="createNewChat()" class="w-full border border-[#38312d] hover:bg-[#201d1b] text-left py-2 px-3 rounded-lg text-sm flex items-center gap-2 transition text-[#d1ccc7] font-sans">
+                <i class="fa-solid fa-plus text-xs"></i> New chat
+            </button>
+
+            <div id="sessions-list" class="mt-4 space-y-1 overflow-y-auto max-h-[calc(100vh-240px)] pr-1 font-sans">
+                </div>
+        </div>
+
+        <div class="border-t border-[#262321] pt-3 space-y-2 font-sans">
+            <button onclick="exportChat()" class="w-full text-left py-1.5 px-2 hover:bg-[#201d1b] rounded text-xs text-[#a8a19b] hover:text-[#f4f2ef] flex items-center gap-2 transition">
+                <i class="fa-solid fa-download text-xs text-blue-400"></i> Export Chat (.md)
+            </button>
+            <button onclick="clearHistory()" class="w-full text-left py-1.5 px-2 hover:bg-[#201d1b] rounded text-xs text-[#a8a19b] hover:text-red-400 flex items-center gap-2 transition">
+                <i class="fa-solid fa-trash text-xs"></i> Clear history
+            </button>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col justify-between relative bg-[#161616]">
+        
+        <div id="chat-container" class="flex-1 overflow-y-auto p-6 space-y-6 flex flex-col items-center">
+            
+            <div id="welcome-banner" class="my-auto text-center max-w-2xl px-4">
+                <h2 class="text-3xl font-normal text-[#f4f2ef] mb-3">Hi Muhammad! How can I help you today?</h2>
+                <p class="text-sm text-[#857d76] mb-6 font-sans">Choose a starter prompt below or type your custom query:</p>
+                <div class="grid grid-cols-2 gap-3 font-sans text-left">
+                    <div onclick="sendStarter('🧠 Explain Quantum Computing in simple terms')" class="bg-[#1e1b19] border border-[#332e2b] p-3 rounded-xl hover:border-[#c2653d] cursor-pointer transition">
+                        <p class="text-xs font-semibold text-[#f4f2ef]">🧠 Explain Quantum Computing</p>
+                        <p class="text-[11px] text-[#857d76] mt-1">Learn qubits and superposition basics.</p>
+                    </div>
+                    <div onclick="sendStarter('💻 Write a Python script to scrape a website')" class="bg-[#1e1b19] border border-[#332e2b] p-3 rounded-xl hover:border-[#c2653d] cursor-pointer transition">
+                        <p class="text-xs font-semibold text-[#f4f2ef]">💻 Python Web Scraper</p>
+                        <p class="text-[11px] text-[#857d76] mt-1">BeautifulSoup & requests script.</p>
+                    </div>
+                    <div onclick="sendStarter('🚀 Help me debug my machine learning pipeline code')" class="bg-[#1e1b19] border border-[#332e2b] p-3 rounded-xl hover:border-[#c2653d] cursor-pointer transition">
+                        <p class="text-xs font-semibold text-[#f4f2ef]">🚀 Debug ML Pipeline</p>
+                        <p class="text-[11px] text-[#857d76] mt-1">Optimize model training & metrics.</p>
+                    </div>
+                    <div onclick="sendStarter('📊 Create a Pandas & Matplotlib data analysis template')" class="bg-[#1e1b19] border border-[#332e2b] p-3 rounded-xl hover:border-[#c2653d] cursor-pointer transition">
+                        <p class="text-xs font-semibold text-[#f4f2ef]">📊 Pandas Analytics Template</p>
+                        <p class="text-[11px] text-[#857d76] mt-1">Data visualization workflow.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="messages-list" class="w-full max-w-3xl space-y-6 hidden">
+                </div>
+        </div>
+
+        <div id="attachment-preview-container" class="max-w-3xl mx-auto w-full px-4 hidden mb-2 font-sans">
+            <div class="inline-flex items-center gap-2 bg-[#201d1b] border border-[#38312d] py-1.5 px-3 rounded-lg text-xs text-[#d1ccc7]">
+                <i id="preview-icon" class="fa-solid fa-file text-emerald-400"></i>
+                <span id="preview-name" class="truncate max-w-[200px]">file.png</span>
+                <button onclick="removeAttachment()" class="text-[#a8a19b] hover:text-red-400 ml-2"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+        </div>
+
+        <div class="p-4 bg-[#161616] flex justify-center">
+            <div class="w-full max-w-3xl bg-[#1e1b19] border border-[#3b322e] rounded-2xl px-4 py-2.5 flex items-center gap-3 shadow-xl relative">
+                
+                <div id="attachment-menu" class="absolute bottom-full left-0 mb-3 bg-[#1e1b19] border border-[#3b322e] rounded-xl shadow-2xl py-2 w-48 hidden z-50 font-sans">
+                    <label class="flex items-center gap-3 px-4 py-2.5 hover:bg-[#2b2522] cursor-pointer text-sm text-[#d1ccc7] transition">
+                        <i class="fa-solid fa-image text-blue-400"></i> Attach Photos
+                        <input type="file" id="photo-input" accept="image/*" class="hidden" onchange="handleFileSelect(event, 'image')">
+                    </label>
+                    <label class="flex items-center gap-3 px-4 py-2.5 hover:bg-[#2b2522] cursor-pointer text-sm text-[#d1ccc7] transition">
+                        <i class="fa-solid fa-paperclip text-emerald-400"></i> Attach Files
+                        <input type="file" id="file-input" accept="*/*" class="hidden" onchange="handleFileSelect(event, 'file')">
+                    </label>
+                </div>
+
+                <button type="button" onclick="toggleAttachmentMenu(event)" class="text-[#a8a19b] hover:text-[#f4f2ef] p-2 rounded-full hover:bg-[#2b2522] transition mb-0.5">
+                    <i class="fa-solid fa-plus text-sm"></i>
+                </button>
+                
+                <button type="button" id="web-search-btn" onclick="toggleWebSearch()" title="Toggle Web Search Grounding" class="text-[#a8a19b] hover:text-[#f4f2ef] p-2 rounded-full hover:bg-[#2b2522] transition mb-0.5">
+                    <i class="fa-solid fa-globe text-sm"></i>
+                </button>
+
+                <button type="button" id="mic-btn" onclick="toggleVoiceInput()" title="Voice Assistant" class="text-[#a8a19b] hover:text-[#f4f2ef] p-2 rounded-full hover:bg-[#2b2522] transition mb-0.5">
+                    <i class="fa-solid fa-microphone text-sm"></i>
+                </button>
+
+                <textarea id="user-input" placeholder="Write a message or speak..." rows="1"
+                    class="flex-1 bg-transparent text-[#f4f2ef] placeholder-[#857d76] focus:outline-none text-sm font-sans py-1.5"
+                    onkeydown="handleKeydown(event)"></textarea>
+
+                <button type="button" onclick="sendMessage()" class="bg-[#c2653d] hover:bg-[#ad5733] text-white rounded-full transition flex items-center justify-center w-8 h-8 shadow-md mb-0.5 shrink-0">
+                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        let currentSessionId = null;
+        let attachedFile = null;
+        let recognition = null;
+        let isRecording = false;
+        let webSearchEnabled = false;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadSessions();
+
+            // Auto-Resize Textarea Event Listener added here
+            const messageInput = document.getElementById('user-input');
+            if (messageInput) {
+                messageInput.addEventListener('input', function() {
+                    this.style.height = 'auto'; // Reset height first
+                    this.style.height = (this.scrollHeight) + 'px'; // Set to content height
+                });
+            }
+
+            document.addEventListener("click", (e) => {
+                const menu = document.getElementById("attachment-menu");
+                if (!menu.contains(e.target) && !e.target.closest("button[onclick*='toggleAttachmentMenu']")) {
+                    menu.classList.add("hidden");
+                }
+            });
+        });
+
+        function handleKeydown(event) {
+            if (event.key === 'Enter') {
+                if (event.shiftKey) {
+                    return;
+                } else {
+                    event.preventDefault();
+                    sendMessage();
+                }
+            }
+        }
+
+        function toggleWebSearch() {
+            webSearchEnabled = !webSearchEnabled;
+            const btn = document.getElementById("web-search-btn");
+            if (webSearchEnabled) {
+                btn.classList.add("text-emerald-400", "bg-[#2b2522]");
+                btn.title = "Web Search Grounding: ON";
+            } else {
+                btn.classList.remove("text-emerald-400", "bg-[#2b2522]");
+                btn.title = "Web Search Grounding: OFF";
+            }
+        }
+
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text.replace(/```[\s\S]*?```/g, 'code snippet omitted'));
+                utterance.rate = 1.0;
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert("Text-to-speech is not supported in your browser.");
+            }
+        }
+
+        function copyCode(btn) {
+            const pre = btn.parentElement;
+            const code = pre.querySelector('code');
+            navigator.clipboard.writeText(code.innerText);
+            btn.textContent = "Copied!";
+            setTimeout(() => btn.textContent = "Copy", 2000);
+        }
+
+        function processMarkdownWithCopyButtons(markdownText) {
+            let html = marked.parse(markdownText);
+            html = html.replace(/<pre><code(.*?)>([\s\S]*?)<\/code><\/pre>/g, '<pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code$1>$2</code></pre>');
+            return html;
+        }
+
+        async function exportChat() {
+            if (!currentSessionId) {
+                alert("No active chat to export!");
+                return;
+            }
+            try {
+                const res = await fetch(`/sessions/${currentSessionId}/messages`);
+                const messages = await res.json();
+                if (messages.length === 0) {
+                    alert("Chat is empty!");
+                    return;
+                }
+                let mdContent = `# Nexora Chat Export\n\n`;
+                messages.forEach(m => {
+                    mdContent += `### ${m.role.toUpperCase()}:\n${m.message}\n\n---\n\n`;
+                });
+                const blob = new Blob([mdContent], { type: 'text/markdown' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `nexora-chat-${currentSessionId.slice(0,6)}.md`;
+                a.click();
+            } catch (err) {
+                console.error("Export failed:", err);
+            }
+        }
+
+        function sendStarter(promptText) {
+            const input = document.getElementById("user-input");
+            input.value = promptText;
+            input.style.height = 'auto';
+            input.style.height = (input.scrollHeight) + 'px';
+            sendMessage();
+        }
+
+        function toggleVoiceInput() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                alert("Speech recognition is not supported in your browser. Please use Google Chrome.");
+                return;
+            }
+            if (!recognition) {
+                recognition = new SpeechRecognition();
+                recognition.lang = 'en-US';
+                recognition.interimResults = false;
+                recognition.maxAlternatives = 1;
+
+                recognition.onstart = () => {
+                    isRecording = true;
+                    document.getElementById("mic-btn").classList.add("text-red-400", "animate-pulse");
+                };
+                recognition.onresult = (event) => {
+                    const input = document.getElementById("user-input");
+                    input.value = event.results[0][0].transcript;
+                    input.style.height = 'auto';
+                    input.style.height = (input.scrollHeight) + 'px';
+                };
+                recognition.onerror = () => stopVoice();
+                recognition.onend = () => stopVoice();
+            }
+            if (isRecording) { recognition.stop(); } else { recognition.start(); }
+        }
+
+        function stopVoice() {
+            isRecording = false;
+            const micBtn = document.getElementById("mic-btn");
+            if (micBtn) micBtn.classList.remove("text-red-400", "animate-pulse");
+        }
+
+        async function loadSessions() {
+            try {
+                const res = await fetch("/sessions");
+                const sessions = await res.json();
+                const listEl = document.getElementById("sessions-list");
+                listEl.innerHTML = "";
+                
+                if (sessions.length > 0) {
+                    if (!currentSessionId) {
+                        currentSessionId = sessions[0].id;
+                        loadMessages(currentSessionId);
+                    }
+                    const filteredSessions = sessions.filter(s => s.title && s.title.trim() !== "New Chat");
+                    filteredSessions.forEach(s => {
+                        const isActive = s.id === currentSessionId;
+                        const btn = document.createElement("button");
+                        btn.className = `w-full text-left py-2 px-3 rounded-lg text-sm truncate transition ${isActive ? 'bg-[#262220] text-[#f4f2ef] font-medium' : 'text-[#a8a19b] hover:bg-[#201d1b] hover:text-[#f4f2ef]'}`;
+                        btn.textContent = s.title;
+                        btn.onclick = () => switchSession(s.id);
+                        listEl.appendChild(btn);
+                    });
+                } else {
+                    createNewChat();
+                }
+            } catch (err) {
+                console.error("Error loading sessions:", err);
+            }
+        }
+
+        async function createNewChat() {
+            try {
+                const res = await fetch("/sessions", { method: "POST" });
+                const data = await res.json();
+                currentSessionId = data.session_id;
+                loadSessions();
+                
+                document.getElementById("welcome-banner").classList.remove("hidden");
+                document.getElementById("messages-list").classList.add("hidden");
+                document.getElementById("messages-list").innerHTML = "";
+            } catch (err) {
+                console.error("Error creating session:", err);
+            }
+        }
+
+        async function switchSession(sessionId) {
+            currentSessionId = sessionId;
+            loadSessions();
+            loadMessages(sessionId);
+        }
+
+        async function loadMessages(sessionId) {
+            try {
+                const res = await fetch(`/sessions/${sessionId}/messages`);
+                const messages = await res.json();
+                
+                const banner = document.getElementById("welcome-banner");
+                const list = document.getElementById("messages-list");
+                list.innerHTML = "";
+
+                if (messages.length === 0) {
+                    banner.classList.remove("hidden");
+                    list.classList.add("hidden");
+                } else {
+                    banner.classList.add("hidden");
+                    list.classList.remove("hidden");
+                    messages.forEach(m => {
+                        appendMessageToDOM(m.role, m.message, m.file_path);
+                    });
+                }
+                const container = document.getElementById("chat-container");
+                container.scrollTop = container.scrollHeight;
+            } catch (err) {
+                console.error("Error loading messages:", err);
+            }
+        }
+
+        function toggleAttachmentMenu(e) {
+            e.stopPropagation();
+            document.getElementById("attachment-menu").classList.toggle("hidden");
+        }
+
+        function handleFileSelect(event, type) {
+            const file = event.target.files[0];
+            if (!file) return;
+            attachedFile = file;
+            const previewContainer = document.getElementById("attachment-preview-container");
+            document.getElementById("preview-name").textContent = file.name;
+            document.getElementById("preview-icon").className = type === 'image' ? "fa-solid fa-image text-blue-400" : "fa-solid fa-file text-emerald-400";
+            previewContainer.classList.remove("hidden");
+            document.getElementById("attachment-menu").classList.add("hidden");
+        }
+
+        function removeAttachment() {
+            attachedFile = null;
+            document.getElementById("attachment-preview-container").classList.add("hidden");
+            document.getElementById("photo-input").value = "";
+            document.getElementById("file-input").value = "";
+        }
+
+        function appendMessageToDOM(role, text, filePath, isStreaming = false) {
+            const list = document.getElementById("messages-list");
+            let div = null;
+            
+            if (isStreaming) {
+                div = document.createElement("div");
+                div.className = "flex gap-4 w-full justify-start streaming-msg-container";
+                div.innerHTML = `
+                    <div class="flex gap-3 max-w-2xl text-sm leading-relaxed font-sans w-full">
+                        <div class="w-8 h-8 rounded-full bg-[#c2653d] flex items-center justify-center text-white shrink-0 font-bold text-xs font-serif">AI</div>
+                        <div class="text-[#e3ded8] py-1 markdown-content flex-1 streaming-text-target"></div>
+                    </div>
+                `;
+                list.appendChild(div);
+            } else {
+                div = document.createElement("div");
+                div.className = `flex gap-4 w-full ${role === 'user' ? 'justify-end' : 'justify-start'}`;
+
+                let fileHtml = "";
+                if (filePath) {
+                    if (filePath.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+                        fileHtml = `<div class="mb-2"><img src="${filePath}" class="max-w-xs rounded-lg border border-[#3b322e]"></div>`;
+                    } else {
+                        fileHtml = `<div class="mb-2"><a href="${filePath}" target="_blank" class="text-xs text-blue-400 underline flex items-center gap-1"><i class="fa-solid fa-file"></i> Download attached file</a></div>`;
+                    }
+                }
+
+                let formattedText = role === 'assistant' ? processMarkdownWithCopyButtons(text) : text.replace(/\n/g, '<br>');
+                const escapedText = text.replace(/"/g, '&quot;');
+
+                if (role === 'user') {
+                    div.innerHTML = `
+                        <div class="bg-[#24201e] text-[#f4f2ef] px-4 py-3 rounded-2xl max-w-xl text-sm leading-relaxed shadow font-sans">
+                            ${fileHtml}
+                            <div>${formattedText}</div>
+                        </div>
+                    `;
+                } else {
+                    div.innerHTML = `
+                        <div class="flex gap-4 max-w-2xl text-sm leading-relaxed font-sans">
+                            <div class="w-8 h-8 rounded-full bg-[#c2653d] flex items-center justify-center text-white shrink-0 font-bold text-xs font-serif">AI</div>
+                            <div class="text-[#e3ded8] py-1 markdown-content flex-1">
+                                ${fileHtml}
+                                <div class="message-body">${formattedText}</div>
+                                <div class="mt-2 flex items-center gap-3 text-xs text-[#857d76]">
+                                    <button onclick="speakText(\`${escapedText}\`)" class="hover:text-[#f4f2ef] flex items-center gap-1 transition"><i class="fa-solid fa-volume-high"></i> Read aloud</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                list.appendChild(div);
+            }
+            const container = document.getElementById("chat-container");
+            container.scrollTop = container.scrollHeight;
+            return div;
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById("user-input");
+            const text = input.value.trim();
+            if (!text && !attachedFile) return;
+            if (!currentSessionId) {
+                await createNewChat();
+            }
+
+            const currentFile = attachedFile;
+            input.value = "";
+            input.style.height = 'auto'; // Reset textarea height after sending
+            removeAttachment();
+
+            document.getElementById("welcome-banner").classList.add("hidden");
+            document.getElementById("messages-list").classList.remove("hidden");
+            
+            let tempFileUrl = currentFile ? URL.createObjectURL(currentFile) : null;
+            appendMessageToDOM('user', text, tempFileUrl);
+
+            const formData = new FormData();
+            formData.append("session_id", currentSessionId);
+            formData.append("message", text);
+            formData.append("web_search", webSearchEnabled);
+            if (currentFile) formData.append("file", currentFile);
+
+            try {
+                const response = await fetch("/chat-stream", {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error("Stream connection failed");
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let accumulatedResponse = "";
+                
+                const streamDiv = appendMessageToDOM('assistant', '', null, true);
+                const targetEl = streamDiv.querySelector('.streaming-text-target');
+
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+                    const chunk = decoder.decode(value, { stream: true });
+                    accumulatedResponse += chunk;
+                    targetEl.innerHTML = processMarkdownWithCopyButtons(accumulatedResponse);
+                    const container = document.getElementById("chat-container");
+                    container.scrollTop = container.scrollHeight;
+                }
+
+                streamDiv.remove();
+                appendMessageToDOM('assistant', accumulatedResponse, null);
+                loadSessions();
+
+            } catch (err) {
+                console.error(err);
+                appendMessageToDOM('assistant', "❌ Server connection error during stream.", null);
+            }
+        }
+
+        async function clearHistory() {
+            if (!confirm("Are you sure you want to clear all history?")) return;
+            try {
+                await fetch("/clear-history", { method: "POST" });
+                currentSessionId = null;
+                document.getElementById("messages-list").innerHTML = "";
+                document.getElementById("messages-list").classList.add("hidden");
+                document.getElementById("welcome-banner").classList.remove("hidden");
+                loadSessions();
+            } catch (err) {
+                console.error("Error clearing history:", err);
+            }
+        }
+    </script>
+</body>
+</html>
