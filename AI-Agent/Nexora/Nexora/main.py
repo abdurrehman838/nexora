@@ -13,7 +13,9 @@ app = FastAPI(title="Abdur AI Universal Assistant")
 
 # Uploads directory setup
 UPLOAD_DIR = "uploads"
-os.makedirs(UPLOAD_DIR, exist_ok=True)
+import os; UPLOAD_DIR = "/tmp/uploads" if os.environ.get("VERCEL") else "uploads"; 
+try: os.makedirs(UPLOAD_DIR, exist_ok=True) 
+except Exception: pass
 app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
 # Static directory setup (Added to fix logo/images)
@@ -135,7 +137,7 @@ async def chat_stream(
         
         encoded_prompt = urllib.parse.quote(image_prompt if image_prompt else message)
         generated_image_url = f"https://image.pollinations.ai/prompt/{encoded_prompt}?width=1024&height=768&nologo=true"
-        final_response = f"🎨 **Here is your generated image based on your prompt:**\n\n![Generated Art]({generated_image_url})\n\n*(Prompt: {message})*"
+        final_response = f"???? **Here is your generated image based on your prompt:**\n\n![Generated Art]({generated_image_url})\n\n*(Prompt: {message})*"
     
     # 2. Universal Text & Task Handling via Gemini API
     else:
@@ -147,9 +149,9 @@ async def chat_stream(
                 )
                 final_response = response.text
             else:
-                final_response = "⚠️ **Client Error:** GenAI client is not initialized properly."
+                final_response = "?????? **Client Error:** GenAI client is not initialized properly."
         except Exception as e:
-            final_response = f"⚠️ Error processing query with AI model: {str(e)}"
+            final_response = f"?????? Error processing query with AI model: {str(e)}"
 
     # Generator to stream response smoothly
     async def generate():
