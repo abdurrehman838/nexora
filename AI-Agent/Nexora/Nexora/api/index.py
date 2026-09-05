@@ -1,11 +1,13 @@
 import sys
 import os
 
-# Root directory ko path mein add karein taake main.py mil jaye
+# Add root folder to sys.path to prevent import errors
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from main import app
-from mangum import Mangum
+from fastapi import FastAPI
 
-# Vercel serverless handler
-handler = Mangum(app)
+app = FastAPI()
+
+@app.get("/")
+def read_root():
+    return {"status": "Nexora is Live and Working Successfully!"}
