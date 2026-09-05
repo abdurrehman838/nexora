@@ -1,22 +1,19 @@
 import os
 import sys
+import traceback
+from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
 
-# Ensure project root is in python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# Safe monkeypatch for Vercel read-only filesystem
-if os.environ.get("VERCEL") or os.path.exists("/var/task"):
-    _orig_makedirs = os.makedirs
-    def _safe_makedirs(name, mode=0o777, exist_ok=False):
-        if "uploads" in str(name):
-            name = "/tmp/uploads"
-        try:
-            return _orig_makedirs(name, mode, exist_ok)
-        except OSError as e:
-            if e.errno == 30:
-                pass
-            else:
-                raise
-    os.makedirs = _safe_makedirs
+app = FastAPI()
 
-from main import app
+@app.get("/{path:path}")
+@app.get("/")
+def catch_all(path: str = ""):
+    try:
+        from main import app as main_app
+        return main_app(path)
+    except Exception as e:
+        tb = traceback.format_exc()
+        return HTMLResponse(content=f"<h3>Critical Startup Error:</h3><pre>{tb}</pre>", status_code=200)
