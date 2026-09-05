@@ -1,11 +1,8 @@
-from fastapi import FastAPI
+import sys
+import os
 
-app = FastAPI()
+# Add parent folder to sys.path so Python can find main.py
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-@app.get("/")
-def read_root():
-    return {"status": "Nexora Live!"}
-
-@app.get("/{path:path}")
-def catch_all(path: str):
-    return {"status": "Nexora Live!", "path": path}
+# Import your actual FastAPI instance from main.py
+from main import app
