@@ -7,7 +7,7 @@ import uuid
 from typing import Optional
 
 from fastapi import FastAPI, File, Form, UploadFile
-from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse
+from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from google import genai
 
@@ -225,40 +225,59 @@ async def chat_stream(
             f"![Generated Art]({generated_image_url})\n\n"
             f"*(Prompt: {message})*"
         )
-    else:
+        
+        # Save assistant message to database safely
         try:
-            if client:
-                coro = asyncio.to_thread(
-                    client.models.generate_content,
-                    model="gemini-3.6-flash",
-                    contents=message,
+            conn_inner = sqlite3.connect(DB_FILE)
+            conn_inner.execute(
+                "INSERT INTO messages (session_id, role, message, file_path) VALUES (?, ?, ?, ?)",
+                (session_id, "assistant", final_response, None),
+            )
+            conn_inner.commit()
+            conn_inner.close()
+        except Exception:
+            pass
+            
+        return PlainTextResponse(final_response)
+
+    else:
+        async def response_generator():
+            full_response = ""
+            try:
+                if client:
+                    # Use true streaming to keep Vercel connection alive instantly
+                    response_stream = client.models.generate_content_stream(
+                        model="gemini-3.6-flash",
+                        contents=message,
+                    )
+                    for chunk in response_stream:
+                        if chunk.text:
+                            full_response += chunk.text
+                            yield chunk.text
+                else:
+                    full_response = "Error: Gemini client not initialized."
+                    yield full_response
+            except Exception as error:
+                err_str = str(error)
+                if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
+                    full_response = "⚠️ **API Rate Limit Exceeded:** Baaz auqaat jaldi requests bhejne par limit hit hoti hai. Thori dair baad try karein!"
+                else:
+                    full_response = f"AI Error: {err_str}"
+                yield full_response
+
+            # Save full assistant response to database after streaming completes
+            try:
+                conn_inner = sqlite3.connect(DB_FILE)
+                conn_inner.execute(
+                    "INSERT INTO messages (session_id, role, message, file_path) VALUES (?, ?, ?, ?)",
+                    (session_id, "assistant", full_response, None),
                 )
-                response = await asyncio.wait_for(coro, timeout=8.0)
-                final_response = response.text if response and response.text else "No response generated."
-            else:
-                final_response = "Error: Gemini client not initialized."
-        except asyncio.TimeoutError:
-            final_response = "AI response took slightly longer than expected. Please try sending your message again!"
-        except Exception as error:
-            err_str = str(error)
-            if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
-                final_response = "⚠️ **API Rate Limit Exceeded (429):** Aapne free tier ki request limit jaldi mein cross kar li hai. Baraye meharbani 40-50 seconds intezaar karke dobara message bhejiye!"
-            else:
-                final_response = f"AI Error: {err_str}"
+                conn_inner.commit()
+                conn_inner.close()
+            except Exception:
+                pass
 
-    # Save assistant message to database safely
-    try:
-        conn_inner = sqlite3.connect(DB_FILE)
-        conn_inner.execute(
-            "INSERT INTO messages (session_id, role, message, file_path) VALUES (?, ?, ?, ?)",
-            (session_id, "assistant", final_response, None),
-        )
-        conn_inner.commit()
-        conn_inner.close()
-    except Exception:
-        pass
-
-    return PlainTextResponse(final_response)
+        return StreamingResponse(response_generator(), media_type="text/plain")
 
 
 @app.post("/clear-history")
