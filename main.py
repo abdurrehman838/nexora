@@ -201,20 +201,20 @@ async def chat_stream(
     else:
         try:
             if client:
-                # Updated to gemini-3.6-flash based on API recommendation
+                # Using gemini-1.5-flash for fastest response speed on Vercel
                 response = client.models.generate_content(
-                    model="gemini-3.6-flash",
+                    model="gemini-1.5-flash",
                     contents=message,
                 )
-                final_response = response.text
+                final_response = response.text if response and response.text else "No response generated."
             else:
                 final_response = "**Client Error:** GenAI client not initialized."
         except Exception as error:
             final_response = f"Error processing query with AI model: {error}"
 
     async def generate():
-        for index in range(0, len(final_response), 20):
-            yield final_response[index:index + 20]
+        for index in range(0, len(final_response), 30):
+            yield final_response[index:index + 30]
 
         conn_inner = sqlite3.connect(DB_FILE)
         conn_inner.execute(
