@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexora AI</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%23121212%22/><path d=%22M30 70V30c0-3 2-5 5-5h6c3 0 5 2 5 5v20l22-25c2-2 5-2 7-1s3 4 3 7v40c0 3-2 5-5 5h-6c-3 0-5-2-5-5V50L37 75c-2 2-5 2-7 1s-3-4-3-7z%22 fill=%22%23d97706%22/><path d=%22M78 20l2 6 6 2-6 2-2 6-2-6-6-2 6-2 2-6z%22 fill=%22%23fbbf24%22/></svg>">
+    <link rel="icon" href="/static/logo.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -45,19 +45,20 @@
         .sidebar-logo {
             width: 38px;
             height: 38px;
-            background: linear-gradient(135deg, #1e1e1e 0%, #121212 100%);
-            border: 1px solid #333333;
             border-radius: 10px;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
+            background: #1e1e1e;
+            border: 1px solid #333333;
             box-shadow: 0 4px 10px rgba(0,0,0,0.4);
         }
 
-        .sidebar-logo svg {
-            width: 24px;
-            height: 24px;
+        .sidebar-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .sidebar-header h2 {
@@ -509,10 +510,7 @@
     <div id="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">
-                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M30 70V30c0-3 2-5 5-5h6c3 0 5 2 5 5v20l22-25c2-2 5-2 7-1s3 4 3 7v40c0 3-2 5-5 5h-6c-3 0-5-2-5-5V50L37 75c-2 2-5 2-7 1s-3-4-3-7z" fill="#d97706"/>
-                    <path d="M78 20l2 6 6 2-6 2-2 6-2-6-6-2 6-2 2-6z" fill="#fbbf24"/>
-                </svg>
+                <img src="/static/logo.png" alt="Nexora Logo">
             </div>
             <div>
                 <h2>Nexora AI</h2>
