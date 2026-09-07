@@ -20,7 +20,8 @@ STATIC_DIR = "static"
 os.makedirs(STATIC_DIR, exist_ok=True)
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
-DB_FILE = "chat_database.db"
+# Vercel read-only filesystem fix for SQLite database
+DB_FILE = "/tmp/chat_database.db" if os.environ.get("VERCEL") else "chat_database.db"
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 
 try:
@@ -208,7 +209,7 @@ async def chat_stream(
         try:
             if client:
                 response = client.models.generate_content(
-                    model="gemini-3.6-flash",
+                    model="gemini-2.5-flash",
                     contents=message,
                 )
                 final_response = response.text
