@@ -228,7 +228,6 @@ async def chat_stream(
     else:
         try:
             if client:
-                # Wrap in asyncio.to_thread and asyncio.wait_for to prevent Vercel timeout/crash
                 coro = asyncio.to_thread(
                     client.models.generate_content,
                     model="gemini-3.6-flash",
@@ -241,7 +240,11 @@ async def chat_stream(
         except asyncio.TimeoutError:
             final_response = "AI response took slightly longer than expected. Please try sending your message again!"
         except Exception as error:
-            final_response = f"AI Error: {str(error)}"
+            err_str = str(error)
+            if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
+                final_response = "⚠️ **API Rate Limit Exceeded (429):** Aapne free tier ki request limit jaldi mein cross kar li hai. Baraye meharbani 40-50 seconds intezaar karke dobara message bhejiye!"
+            else:
+                final_response = f"AI Error: {err_str}"
 
     # Save assistant message to database safely
     try:
