@@ -10,15 +10,16 @@ from fastapi.responses import FileResponse, HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from google import genai
 
-app = FastAPI(title="Abdur AI Universal Assistant")
+app = FastAPI(title="Nexora AI Assistant")
 
+# Vercel temporary directories for write operations
 UPLOAD_DIR = "/tmp/uploads" if os.environ.get("VERCEL") else "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
 STATIC_DIR = "static"
-os.makedirs(STATIC_DIR, exist_ok=True)
-app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+if os.path.exists(STATIC_DIR):
+    app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 # Vercel read-only filesystem fix for SQLite database
 DB_FILE = "/tmp/chat_database.db" if os.environ.get("VERCEL") else "chat_database.db"
@@ -49,7 +50,6 @@ def init_db():
             FOREIGN KEY (session_id) REFERENCES sessions (id)
         )
     """)
-    # Added Users Table for Authentication
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -69,8 +69,7 @@ def read_index():
     if os.path.exists("templates/index.html"):
         return FileResponse("templates/index.html")
     return HTMLResponse(
-        "<h3>Error: index.html file missing in templates folder! "
-        "Please make sure it is inside the 'templates' directory.</h3>"
+        "<h3>Error: index.html file missing in templates folder!</h3>"
     )
 
 
@@ -113,7 +112,6 @@ def get_messages(session_id: str):
     ]
 
 
-# Signup Endpoint
 @app.post("/api/signup")
 async def signup(data: dict):
     username = data.get("username", "").strip()
@@ -133,7 +131,6 @@ async def signup(data: dict):
         conn.close()
 
 
-# Login Endpoint
 @app.post("/api/login")
 async def login(data: dict):
     username = data.get("username", "").strip()
