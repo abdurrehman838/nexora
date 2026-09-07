@@ -16,8 +16,8 @@
         }
 
         body {
-            background-color: #131314;
-            color: #e3e3e3;
+            background-color: #1a1614; /* Warm brown-dark background */
+            color: #e6dfdc;
             height: 100vh;
             display: flex;
             overflow: hidden;
@@ -26,8 +26,8 @@
         /* Sidebar Styling */
         #sidebar {
             width: 280px;
-            background-color: #1e1f20;
-            border-right: 1px solid #2e2f31;
+            background-color: #221d1a;
+            border-right: 1px solid #362f2b;
             display: flex;
             flex-direction: column;
             transition: transform 0.3s ease;
@@ -40,23 +40,23 @@
 
         .sidebar-header h2 {
             font-size: 18px;
-            color: #ffffff;
+            color: #f3ece9;
             font-weight: 600;
             letter-spacing: 0.5px;
         }
 
         .sidebar-header p {
             font-size: 12px;
-            color: #8e918f;
+            color: #b5a49e;
             margin-top: 2px;
         }
 
         .new-chat-btn {
             margin: 12px 16px;
             padding: 12px;
-            background-color: #2b2c2f;
-            color: #ffffff;
-            border: 1px solid #3c3d40;
+            background-color: #332b26;
+            color: #f3ece9;
+            border: 1px solid #4a3e37;
             border-radius: 12px;
             cursor: pointer;
             font-size: 14px;
@@ -68,7 +68,7 @@
         }
 
         .new-chat-btn:hover {
-            background-color: #38393d;
+            background-color: #423832;
         }
 
         .session-list {
@@ -82,7 +82,7 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
-            color: #c4c7c5;
+            color: #d1c5bf;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -91,13 +91,13 @@
         }
 
         .session-item:hover, .session-item.active {
-            background-color: #2b2c2f;
-            color: #ffffff;
+            background-color: #332b26;
+            color: #f3ece9;
         }
 
         .sidebar-footer {
             padding: 16px;
-            border-top: 1px solid #2e2f31;
+            border-top: 1px solid #362f2b;
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -106,7 +106,7 @@
         .footer-action-btn {
             background: none;
             border: none;
-            color: #c4c7c5;
+            color: #d1c5bf;
             cursor: pointer;
             font-size: 13px;
             text-align: left;
@@ -118,14 +118,14 @@
         }
 
         .footer-action-btn:hover {
-            color: #ffffff;
+            color: #f3ece9;
         }
 
         .footer-action-btn.clear-btn {
-            color: #f2b8b5;
+            color: #e57373;
         }
         .footer-action-btn.clear-btn:hover {
-            color: #ffb4ab;
+            color: #ef9a9a;
         }
 
         /* Main Container */
@@ -133,7 +133,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            background-color: #131314;
+            background-color: #1a1614;
             position: relative;
             height: 100vh;
             overflow: hidden;
@@ -144,14 +144,14 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background-color: #131314;
+            background-color: #1a1614;
         }
 
         #mobileMenuBtn {
             display: none;
             background: none;
             border: none;
-            color: #e3e3e3;
+            color: #e6dfdc;
             font-size: 20px;
             cursor: pointer;
         }
@@ -182,16 +182,13 @@
         .welcome-screen h1 {
             font-size: 32px;
             font-weight: 600;
-            color: #ffffff;
+            color: #f3ece9;
             margin-bottom: 8px;
-            background: linear-gradient(90deg, #8ab4f8, #c58af9);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
         }
 
         .welcome-screen p {
             font-size: 14px;
-            color: #8e918f;
+            color: #b5a49e;
             margin-bottom: 32px;
         }
 
@@ -204,8 +201,8 @@
         }
 
         .starter-card {
-            background-color: #1e1f20;
-            border: 1px solid #2e2f31;
+            background-color: #26211e;
+            border: 1px solid #362f2b;
             padding: 16px;
             border-radius: 12px;
             cursor: pointer;
@@ -214,13 +211,13 @@
         }
 
         .starter-card:hover {
-            background-color: #2b2c2f;
-            border-color: #3c3d40;
+            background-color: #332b26;
+            border-color: #4a3e37;
         }
 
         .starter-card h4 {
             font-size: 14px;
-            color: #ffffff;
+            color: #f3ece9;
             margin-bottom: 4px;
             display: flex;
             align-items: center;
@@ -229,7 +226,7 @@
 
         .starter-card p {
             font-size: 12px;
-            color: #8e918f;
+            color: #b5a49e;
             margin: 0;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -253,13 +250,13 @@
         .message-content {
             padding: 14px 18px;
             border-radius: 16px;
-            background-color: #1e1f20;
-            color: #e3e3e3;
-            border: 1px solid #2e2f31;
+            background-color: #26211e;
+            color: #e6dfdc;
+            border: 1px solid #362f2b;
         }
 
         .message.user .message-content {
-            background-color: #004a77;
+            background-color: #5c3a21; /* Warm brown user bubble */
             color: #ffffff;
             border: none;
         }
@@ -279,8 +276,8 @@
         }
 
         .chat-input-box {
-            background-color: #1e1f20;
-            border: 1px solid #3c3d40;
+            background-color: #26211e;
+            border: 1px solid #4a3e37;
             border-radius: 16px;
             padding: 12px 16px;
             display: flex;
@@ -291,7 +288,7 @@
         }
 
         .chat-input-box:focus-within {
-            border-color: #8ab4f8;
+            border-color: #d97706;
         }
 
         .chat-input-box textarea {
@@ -321,7 +318,7 @@
         .action-btn {
             background: none;
             border: none;
-            color: #c4c7c5;
+            color: #d1c5bf;
             cursor: pointer;
             font-size: 16px;
             padding: 6px;
@@ -333,13 +330,13 @@
         }
 
         .action-btn:hover {
-            background-color: #2b2c2f;
+            background-color: #332b26;
             color: #ffffff;
         }
 
         .send-btn {
-            background-color: #8ab4f8;
-            color: #131314;
+            background-color: #d97706; /* Warm amber/brown send button */
+            color: #ffffff;
             border: none;
             width: 36px;
             height: 36px;
@@ -352,7 +349,7 @@
         }
 
         .send-btn:hover {
-            background-color: #aecbfa;
+            background-color: #b45309;
         }
 
         /* Modal Overlay */
@@ -370,8 +367,8 @@
         }
 
         .modal-card {
-            background-color: #1e1f20;
-            border: 1px solid #2e2f31;
+            background-color: #221d1a;
+            border: 1px solid #362f2b;
             padding: 36px;
             border-radius: 20px;
             width: 100%;
@@ -382,14 +379,14 @@
 
         .modal-card h2 {
             font-size: 24px;
-            color: #ffffff;
+            color: #f3ece9;
             margin-bottom: 6px;
             font-weight: 600;
         }
 
         .modal-card p {
             font-size: 14px;
-            color: #c4c7c5;
+            color: #b5a49e;
             margin-bottom: 24px;
         }
 
@@ -401,7 +398,7 @@
         .form-group label {
             display: block;
             font-size: 13px;
-            color: #c4c7c5;
+            color: #b5a49e;
             margin-bottom: 6px;
             font-weight: 500;
         }
@@ -409,8 +406,8 @@
         .form-group input {
             width: 100%;
             padding: 12px 16px;
-            background-color: #131314;
-            border: 1px solid #3c3d40;
+            background-color: #1a1614;
+            border: 1px solid #4a3e37;
             border-radius: 10px;
             color: #ffffff;
             font-size: 14px;
@@ -419,8 +416,8 @@
 
         .modal-btn {
             width: 100%;
-            background-color: #8ab4f8;
-            color: #131314;
+            background-color: #d97706;
+            color: #ffffff;
             border: none;
             padding: 12px;
             border-radius: 10px;
@@ -433,11 +430,11 @@
         .switch-auth {
             margin-top: 20px;
             font-size: 13px;
-            color: #c4c7c5;
+            color: #b5a49e;
         }
 
         .switch-auth a {
-            color: #8ab4f8;
+            color: #d97706;
             text-decoration: none;
             font-weight: 500;
         }
@@ -495,9 +492,7 @@
         <button class="new-chat-btn" onclick="createNewSession()">
             <i class="fa-solid fa-plus"></i> New chat
         </button>
-        <div class="session-list" id="sessionList">
-            <!-- Dynamic Sessions -->
-        </div>
+        <div class="session-list" id="sessionList"></div>
         <div class="sidebar-footer">
             <button class="footer-action-btn" onclick="exportChatMarkdown()">
                 <i class="fa-solid fa-download"></i> Export Chat (.md)
@@ -505,7 +500,7 @@
             <button class="footer-action-btn clear-btn" onclick="clearHistory()">
                 <i class="fa-solid fa-trash-can"></i> Clear history
             </button>
-            <div style="font-size: 13px; color: #c4c7c5; display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+            <div style="font-size: 13px; color: #b5a49e; display: flex; align-items: center; gap: 8px; margin-top: 4px;">
                 <i class="fa-solid fa-user-circle"></i> <span id="currentUserDisplay">Muhammad Abdur Rehman</span>
             </div>
         </div>
@@ -516,7 +511,7 @@
         <div class="chat-header">
             <div style="display: flex; align-items: center; gap: 12px;">
                 <button id="mobileMenuBtn" onclick="toggleMobileSidebar()"><i class="fa-solid fa-bars"></i></button>
-                <span id="currentChatTitle" style="font-weight: 500; font-size: 15px; color: #c4c7c5;">New Chat</span>
+                <span id="currentChatTitle" style="font-weight: 500; font-size: 15px; color: #b5a49e;">New Chat</span>
             </div>
         </div>
 
@@ -526,19 +521,19 @@
                 <p>Choose a starter prompt below or type your custom query:</p>
                 <div class="starter-cards">
                     <div class="starter-card" onclick="sendStarterPrompt('Explain Quantum Computing clearly with examples.')">
-                        <h4><i class="fa-solid fa-atom" style="color: #8ab4f8;"></i> Explain Quantum Computing</h4>
+                        <h4><i class="fa-solid fa-atom" style="color: #d97706;"></i> Explain Quantum Computing</h4>
                         <p>Learn qubits and superposition concepts.</p>
                     </div>
                     <div class="starter-card" onclick="sendStarterPrompt('Write a Python web scraper using BeautifulSoup.')">
-                        <h4><i class="fa-solid fa-code" style="color: #c58af9;"></i> Python Web Scraper</h4>
+                        <h4><i class="fa-solid fa-code" style="color: #d97706;"></i> Python Web Scraper</h4>
                         <p>BeautifulSoup & requests script.</p>
                     </div>
                     <div class="starter-card" onclick="sendStarterPrompt('Debug machine learning model training loss spikes.')">
-                        <h4><i class="fa-solid fa-bug" style="color: #ffb4ab;"></i> Debug ML Pipeline</h4>
+                        <h4><i class="fa-solid fa-bug" style="color: #d97706;"></i> Debug ML Pipeline</h4>
                         <p>Optimize model training & hyperparameters.</p>
                     </div>
                     <div class="starter-card" onclick="sendStarterPrompt('Create a Pandas analytics template for CSV exploration.')">
-                        <h4><i class="fa-solid fa-chart-line" style="color: #81c995;"></i> Pandas Analytics Template</h4>
+                        <h4><i class="fa-solid fa-chart-line" style="color: #d97706;"></i> Pandas Analytics Template</h4>
                         <p>Data visualization workflow.</p>
                     </div>
                 </div>
@@ -558,7 +553,7 @@
                             <i class="fa-solid fa-globe"></i>
                         </button>
                     </div>
-                    <button class="send-btn" onclick="sendMessage()"><i class="fa-solid fa-arrow-up" style="color: #131314;"></i></button>
+                    <button class="send-btn" onclick="sendMessage()"><i class="fa-solid fa-arrow-up" style="color: #ffffff;"></i></button>
                 </div>
             </div>
         </div>
@@ -656,19 +651,19 @@
                         <p>Choose a starter prompt below or type your custom query:</p>
                         <div class="starter-cards">
                             <div class="starter-card" onclick="sendStarterPrompt('Explain Quantum Computing clearly with examples.')">
-                                <h4><i class="fa-solid fa-atom" style="color: #8ab4f8;"></i> Explain Quantum Computing</h4>
+                                <h4><i class="fa-solid fa-atom" style="color: #d97706;"></i> Explain Quantum Computing</h4>
                                 <p>Learn qubits and superposition concepts.</p>
                             </div>
                             <div class="starter-card" onclick="sendStarterPrompt('Write a Python web scraper using BeautifulSoup.')">
-                                <h4><i class="fa-solid fa-code" style="color: #c58af9;"></i> Python Web Scraper</h4>
+                                <h4><i class="fa-solid fa-code" style="color: #d97706;"></i> Python Web Scraper</h4>
                                 <p>BeautifulSoup & requests script.</p>
                             </div>
                             <div class="starter-card" onclick="sendStarterPrompt('Debug machine learning model training loss spikes.')">
-                                <h4><i class="fa-solid fa-bug" style="color: #ffb4ab;"></i> Debug ML Pipeline</h4>
+                                <h4><i class="fa-solid fa-bug" style="color: #d97706;"></i> Debug ML Pipeline</h4>
                                 <p>Optimize model training & hyperparameters.</p>
                             </div>
                             <div class="starter-card" onclick="sendStarterPrompt('Create a Pandas analytics template for CSV exploration.')">
-                                <h4><i class="fa-solid fa-chart-line" style="color: #81c995;"></i> Pandas Analytics Template</h4>
+                                <h4><i class="fa-solid fa-chart-line" style="color: #d97706;"></i> Pandas Analytics Template</h4>
                                 <p>Data visualization workflow.</p>
                             </div>
                         </div>
@@ -699,19 +694,19 @@
                             <p>Choose a starter prompt below or type your custom query:</p>
                             <div class="starter-cards">
                                 <div class="starter-card" onclick="sendStarterPrompt('Explain Quantum Computing clearly with examples.')">
-                                    <h4><i class="fa-solid fa-atom" style="color: #8ab4f8;"></i> Explain Quantum Computing</h4>
+                                    <h4><i class="fa-solid fa-atom" style="color: #d97706;"></i> Explain Quantum Computing</h4>
                                     <p>Learn qubits and superposition concepts.</p>
                                 </div>
                                 <div class="starter-card" onclick="sendStarterPrompt('Write a Python web scraper using BeautifulSoup.')">
-                                    <h4><i class="fa-solid fa-code" style="color: #c58af9;"></i> Python Web Scraper</h4>
+                                    <h4><i class="fa-solid fa-code" style="color: #d97706;"></i> Python Web Scraper</h4>
                                     <p>BeautifulSoup & requests script.</p>
                                 </div>
                                 <div class="starter-card" onclick="sendStarterPrompt('Debug machine learning model training loss spikes.')">
-                                    <h4><i class="fa-solid fa-bug" style="color: #ffb4ab;"></i> Debug ML Pipeline</h4>
+                                    <h4><i class="fa-solid fa-bug" style="color: #d97706;"></i> Debug ML Pipeline</h4>
                                     <p>Optimize model training & hyperparameters.</p>
                                 </div>
                                 <div class="starter-card" onclick="sendStarterPrompt('Create a Pandas analytics template for CSV exploration.')">
-                                    <h4><i class="fa-solid fa-chart-line" style="color: #81c995;"></i> Pandas Analytics Template</h4>
+                                    <h4><i class="fa-solid fa-chart-line" style="color: #d97706;"></i> Pandas Analytics Template</h4>
                                     <p>Data visualization workflow.</p>
                                 </div>
                             </div>
@@ -740,7 +735,7 @@
         function toggleWebSearch() {
             webSearchActive = !webSearchActive;
             const btn = document.getElementById("webSearchBtn");
-            btn.style.color = webSearchActive ? "#8ab4f8" : "#c4c7c5";
+            btn.style.color = webSearchActive ? "#d97706" : "#d1c5bf";
         }
 
         function handleFileSelect() {
@@ -811,7 +806,7 @@
                 if (filePath.match(/\.(jpeg|jpg|gif|png)$/i)) {
                     fileHtml = `<img src="${filePath}" alt="Attachment">`;
                 } else {
-                    fileHtml = `<p><a href="${filePath}" target="_blank" style="color: #8ab4f8;">View Attachment</a></p>`;
+                    fileHtml = `<p><a href="${filePath}" target="_blank" style="color: #d97706;">View Attachment</a></p>`;
                 }
             }
 

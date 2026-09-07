@@ -12,7 +12,6 @@ from google import genai
 
 app = FastAPI(title="Nexora AI Assistant")
 
-# Vercel temporary directories for write operations
 UPLOAD_DIR = "/tmp/uploads" if os.environ.get("VERCEL") else "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
@@ -21,7 +20,6 @@ STATIC_DIR = "static"
 if os.path.exists(STATIC_DIR):
     app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
-# Vercel read-only filesystem fix for SQLite database
 DB_FILE = "/tmp/chat_database.db" if os.environ.get("VERCEL") else "chat_database.db"
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 
@@ -68,9 +66,7 @@ init_db()
 def read_index():
     if os.path.exists("templates/index.html"):
         return FileResponse("templates/index.html")
-    return HTMLResponse(
-        "<h3>Error: index.html file missing in templates folder!</h3>"
-    )
+    return HTMLResponse("<h3>Error: index.html file missing!</h3>")
 
 
 @app.get("/sessions")
@@ -117,7 +113,7 @@ async def signup(data: dict):
     username = data.get("username", "").strip()
     password = data.get("password", "")
     if not username or not password:
-        return {"success": False, "message": "Username and password are required!"}
+        return {"success": False, "message": "Username and password required!"}
     
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
@@ -205,13 +201,14 @@ async def chat_stream(
     else:
         try:
             if client:
+                # FIXED: Changed from gemini-2.5-flash to gemini-1.5-flash to fix 404 error
                 response = client.models.generate_content(
-                    model="gemini-2.5-flash",
+                    model="gemini-1.5-flash",
                     contents=message,
                 )
                 final_response = response.text
             else:
-                final_response = "**Client Error:** GenAI client is not initialized properly."
+                final_response = "**Client Error:** GenAI client not initialized."
         except Exception as error:
             final_response = f"Error processing query with AI model: {error}"
 
