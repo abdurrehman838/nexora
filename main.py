@@ -244,25 +244,22 @@ async def chat_stream(
             full_response = ""
             max_retries = 2
             retry_delay = 2.0
-            success = False
 
             for attempt in range(max_retries + 1):
                 try:
                     if client:
                         response_stream = client.models.generate_content_stream(
-                            model="gemini-2.5-flash",
+                            model="gemini-3.6-flash",
                             contents=message,
                         )
                         for chunk in response_stream:
                             if chunk.text:
                                 full_response += chunk.text
                                 yield chunk.text
-                        success = True
                         break
                     else:
                         full_response = "Error: Gemini client not initialized."
                         yield full_response
-                        success = True
                         break
                 except Exception as error:
                     err_str = str(error)
@@ -276,7 +273,6 @@ async def chat_stream(
                         else:
                             full_response = f"AI Error: {err_str}"
                         yield full_response
-                        success = True
                         break
 
             try:
