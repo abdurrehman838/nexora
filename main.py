@@ -227,16 +227,16 @@ async def chat_stream(
     else:
         try:
             if client:
-                # Using the fastest and most reliable gemini-1.5-flash model
                 response = client.models.generate_content(
                     model="gemini-1.5-flash",
                     contents=message,
                 )
-                final_response = response.text if response and response.text else "I am here, how can I help you further?"
+                final_response = response.text if response and response.text else "No response generated."
             else:
-                final_response = "Hello! I am your Nexora AI Assistant. How can I help you today?"
+                final_response = "Error: Gemini client not initialized (Check GEMINI_API_KEY environment variable on Vercel)."
         except Exception as error:
-            final_response = f"Hello! I received your message. (Note: AI service is currently syncing, please try asking again)."
+            # Display the exact real error so we can fix it immediately
+            final_response = f"AI Error: {str(error)}"
 
     # Save assistant message to database safely
     try:
