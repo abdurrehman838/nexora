@@ -3,6 +3,7 @@ import os
 import shutil
 import sqlite3
 import urllib.parse
+import urllib.request
 import uuid
 from typing import Optional
 
@@ -273,9 +274,19 @@ async def chat_stream(
                         success = True
                         break
             
+            # If all Gemini models fail, fallback to unlimited Pollinations AI Text API!
             if not success:
-                full_response = "All models are currently unavailable or busy. Please try again in a moment."
-                yield full_response
+                try:
+                    encoded_msg = urllib.parse.quote(message)
+                    pollinations_url = f"https://text.pollinations.ai/{encoded_msg}"
+                    req = urllib.request.Request(pollinations_url, headers={'User-Agent': 'Mozilla/5.0'})
+                    with urllib.request.urlopen(req, timeout=30) as resp:
+                        full_response = resp.read().decode('utf-8')
+                        yield full_response
+                        success = True
+                except Exception as fallback_err:
+                    full_response = f"All AI services are currently busy. ({str(fallback_err)})"
+                    yield full_response
 
             try:
                 conn_inner = sqlite3.connect(DB_FILE)
