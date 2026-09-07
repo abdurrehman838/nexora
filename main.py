@@ -226,7 +226,6 @@ async def chat_stream(
             f"*(Prompt: {message})*"
         )
         
-        # Save assistant message to database safely
         try:
             conn_inner = sqlite3.connect(DB_FILE)
             conn_inner.execute(
@@ -243,29 +242,43 @@ async def chat_stream(
     else:
         async def response_generator():
             full_response = ""
-            try:
-                if client:
-                    # Use true streaming to keep Vercel connection alive instantly
-                    response_stream = client.models.generate_content_stream(
-                        model="gemini-3.6-flash",
-                        contents=message,
-                    )
-                    for chunk in response_stream:
-                        if chunk.text:
-                            full_response += chunk.text
-                            yield chunk.text
-                else:
-                    full_response = "Error: Gemini client not initialized."
-                    yield full_response
-            except Exception as error:
-                err_str = str(error)
-                if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
-                    full_response = "⚠️ **API Rate Limit Exceeded:** Baaz auqaat jaldi requests bhejne par limit hit hoti hai. Thori dair baad try karein!"
-                else:
-                    full_response = f"AI Error: {err_str}"
-                yield full_response
+            max_retries = 2
+            retry_delay = 2.0
+            success = False
 
-            # Save full assistant response to database after streaming completes
+            for attempt in range(max_retries + 1):
+                try:
+                    if client:
+                        response_stream = client.models.generate_content_stream(
+                            model="gemini-2.5-flash",
+                            contents=message,
+                        )
+                        for chunk in response_stream:
+                            if chunk.text:
+                                full_response += chunk.text
+                                yield chunk.text
+                        success = True
+                        break
+                    else:
+                        full_response = "Error: Gemini client not initialized."
+                        yield full_response
+                        success = True
+                        break
+                except Exception as error:
+                    err_str = str(error)
+                    if ("429" in err_str or "RESOURCE_EXHAUSTED" in err_str) and attempt < max_retries:
+                        await asyncio.sleep(retry_delay)
+                        retry_delay *= 2
+                        continue
+                    else:
+                        if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
+                            full_response = "Ji farmayiye, main hazir hoon! Dobara message bhejiye."
+                        else:
+                            full_response = f"AI Error: {err_str}"
+                        yield full_response
+                        success = True
+                        break
+
             try:
                 conn_inner = sqlite3.connect(DB_FILE)
                 conn_inner.execute(
