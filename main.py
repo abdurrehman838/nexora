@@ -243,10 +243,9 @@ async def chat_stream(
         async def response_generator():
             full_response = ""
             models_to_try = [
-                "gemini-2.5-flash",
+                "gemini-3.6-flash",
                 "gemini-1.5-flash",
                 "gemini-2.0-flash",
-                "gemini-3.6-flash",
                 "gemini-1.5-pro"
             ]
             
@@ -266,7 +265,7 @@ async def chat_stream(
                         break
                 except Exception as error:
                     err_str = str(error)
-                    if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
+                    if any(code in err_str for code in ["429", "RESOURCE_EXHAUSTED", "404", "NOT_FOUND", "is no longer available"]):
                         continue
                     else:
                         full_response = f"AI Error: {err_str}"
@@ -275,7 +274,7 @@ async def chat_stream(
                         break
             
             if not success:
-                full_response = "All model quotas are temporarily busy. Please try again in a moment."
+                full_response = "All models are currently unavailable or busy. Please try again in a moment."
                 yield full_response
 
             try:
