@@ -201,9 +201,9 @@ async def chat_stream(
     else:
         try:
             if client:
-                # Using gemini-1.5-flash for fastest response speed on Vercel
+                # Using gemini-3.6-flash which is supported by the API
                 response = client.models.generate_content(
-                    model="gemini-1.5-flash",
+                    model="gemini-3.6-flash",
                     contents=message,
                 )
                 final_response = response.text if response and response.text else "No response generated."
