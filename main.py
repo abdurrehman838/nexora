@@ -1,3 +1,4 @@
+import asyncio
 import os
 import shutil
 import sqlite3
@@ -227,14 +228,18 @@ async def chat_stream(
     else:
         try:
             if client:
-                # Updated to gemini-3.6-flash as requested by the API error log
-                response = client.models.generate_content(
+                # Wrap in asyncio.to_thread and asyncio.wait_for to prevent Vercel timeout/crash
+                coro = asyncio.to_thread(
+                    client.models.generate_content,
                     model="gemini-3.6-flash",
                     contents=message,
                 )
+                response = await asyncio.wait_for(coro, timeout=8.0)
                 final_response = response.text if response and response.text else "No response generated."
             else:
-                final_response = "Error: Gemini client not initialized (Check GEMINI_API_KEY environment variable on Vercel)."
+                final_response = "Error: Gemini client not initialized."
+        except asyncio.TimeoutError:
+            final_response = "AI response took slightly longer than expected. Please try sending your message again!"
         except Exception as error:
             final_response = f"AI Error: {str(error)}"
 
