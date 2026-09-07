@@ -227,15 +227,15 @@ async def chat_stream(
     else:
         try:
             if client:
+                # Updated to the correct supported model name gemini-2.5-flash
                 response = client.models.generate_content(
-                    model="gemini-1.5-flash",
+                    model="gemini-2.5-flash",
                     contents=message,
                 )
                 final_response = response.text if response and response.text else "No response generated."
             else:
                 final_response = "Error: Gemini client not initialized (Check GEMINI_API_KEY environment variable on Vercel)."
         except Exception as error:
-            # Display the exact real error so we can fix it immediately
             final_response = f"AI Error: {str(error)}"
 
     # Save assistant message to database safely
