@@ -6,7 +6,7 @@ import uuid
 from typing import Optional
 
 from fastapi import FastAPI, File, Form, UploadFile
-from fastapi.responses import FileResponse, HTMLResponse, StreamingResponse
+from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 from google import genai
 
@@ -198,50 +198,29 @@ async def chat_stream(
             f"![Generated Art]({generated_image_url})\n\n"
             f"*(Prompt: {message})*"
         )
-        async def generate_image():
-            yield final_response
-            conn_inner = sqlite3.connect(DB_FILE)
-            conn_inner.execute(
-                "INSERT INTO messages (session_id, role, message, file_path) VALUES (?, ?, ?, ?)",
-                (session_id, "assistant", final_response, None),
-            )
-            conn_inner.commit()
-            conn_inner.close()
-        return StreamingResponse(generate_image(), media_type="text/plain")
-
-    async def generate_ai():
-        full_response = ""
+    else:
         try:
             if client:
-                # Using true streaming to bypass Vercel 10s timeout
-                response_stream = client.models.generate_content_stream(
+                response = client.models.generate_content(
                     model="gemini-3.6-flash",
                     contents=message,
                 )
-                for chunk in response_stream:
-                    if chunk.text:
-                        full_response += chunk.text
-                        yield chunk.text
+                final_response = response.text if response and response.text else "No response generated."
             else:
-                full_response = "**Client Error:** GenAI client not initialized."
-                yield full_response
+                final_response = "**Client Error:** GenAI client not initialized."
         except Exception as error:
-            err_msg = f"\n\nError processing query with AI model: {error}"
-            full_response += err_msg
-            yield err_msg
+            final_response = f"Error processing query with AI model: {error}"
 
-        try:
-            conn_inner = sqlite3.connect(DB_FILE)
-            conn_inner.execute(
-                "INSERT INTO messages (session_id, role, message, file_path) VALUES (?, ?, ?, ?)",
-                (session_id, "assistant", full_response, None),
-            )
-            conn_inner.commit()
-            conn_inner.close()
-        except Exception:
-            pass
+    # Save assistant message to database safely
+    conn_inner = sqlite3.connect(DB_FILE)
+    conn_inner.execute(
+        "INSERT INTO messages (session_id, role, message, file_path) VALUES (?, ?, ?, ?)",
+        (session_id, "assistant", final_response, None),
+    )
+    conn_inner.commit()
+    conn_inner.close()
 
-    return StreamingResponse(generate_ai(), media_type="text/plain")
+    return PlainTextResponse(final_response)
 
 
 @app.post("/clear-history")
