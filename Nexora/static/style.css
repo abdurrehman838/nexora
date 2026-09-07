@@ -1,0 +1,321 @@
+/* --- Authentic Claude Warm Dark Theme (Larger Font Version) --- */
+:root {
+    --bg-color: #191817;        /* Claude's signature warm dark background */
+    --sidebar-bg: #141312;      /* Deep warm sidebar */
+    --input-bg-color: #211f1e;   /* Floating input box color */
+    --text-main-color: #dedad2;  /* Warm soft beige/off-white text */
+    --text-dim-color: #948f88;   /* Muted warm gray for secondary items */
+    --border-color: #2e2b28;    /* Subtle warm border */
+    --user-bubble-bg: #2c2825;   /* User message container tone */
+    --accent-primary: #cc785c;   /* Claude terracotta accent */
+    --accent-hover: #b5674c;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-serif: Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main-color);
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    font-family: var(--font-sans);
+}
+
+/* --- Sidebar --- */
+.sidebar {
+    width: 260px;
+    background-color: var(--sidebar-bg);
+    display: flex;
+    flex-direction: column;
+    padding: 20px 16px;
+    border-right: 1px solid var(--border-color);
+}
+
+.app-title {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--text-main-color);
+    margin-bottom: 24px;
+    letter-spacing: -0.3px;
+}
+
+.new-chat-btn {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-main-color);
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.15s ease;
+}
+
+.new-chat-btn:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+}
+
+.history-list {
+    flex: 1;
+    overflow-y: auto;
+    list-style: none;
+}
+
+.history-item {
+    padding: 8px 10px;
+    margin-bottom: 2px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--text-dim-color);
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.history-item:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+    color: var(--text-main-color);
+}
+
+.clear-history-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-dim-color);
+    cursor: pointer;
+    padding: 10px 0;
+    text-align: left;
+    font-size: 0.9rem;
+    margin-top: auto;
+    transition: color 0.2s;
+}
+
+.clear-history-btn:hover {
+    color: var(--accent-primary);
+}
+
+/* --- Main Chat Area --- */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-color);
+    position: relative;
+}
+
+.chat-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 40px 20px 110px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    scroll-behavior: smooth;
+}
+
+.message {
+    max-width: 760px;
+    width: 100%;
+    margin: 0 auto;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+}
+
+.msg-bubble {
+    padding: 0;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    font-size: 1.1rem; /* Increased for a larger, prominent look */
+}
+
+/* User Message Pill Box */
+.message.user {
+    align-items: flex-end;
+}
+
+.message.user .msg-bubble {
+    background-color: var(--user-bubble-bg);
+    border: 1px solid var(--border-color);
+    padding: 12px 18px;
+    border-radius: 12px;
+    color: var(--text-main-color);
+    max-width: 80%;
+}
+
+/* Assistant Flow Style */
+.message.assistant {
+    align-items: flex-start;
+}
+
+.message.assistant .msg-bubble {
+    background-color: transparent;
+    color: var(--text-main-color);
+    width: 100%;
+}
+
+/* Welcome Screen */
+.welcome-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+    padding: 20px;
+}
+
+.welcome-screen h1 {
+    font-family: var(--font-serif);
+    font-size: 2.2rem;
+    font-weight: 400;
+    color: var(--text-main-color);
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+}
+
+/* --- Floating Input Box (Claude Exact Style) --- */
+.input-area {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    background: linear-gradient(to top, var(--bg-color) 70%, transparent);
+    display: flex;
+    justify-content: center;
+}
+
+.input-box {
+    width: 100%;
+    max-width: 760px;
+    background-color: var(--input-bg-color);
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-radius: 14px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    transition: border-color 0.2s;
+}
+
+.input-box:focus-within {
+    border-color: var(--accent-primary);
+}
+
+.input-box input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-main-color);
+    font-size: 1.1rem; /* Matched to larger text */
+    outline: none;
+    padding: 0 8px;
+}
+
+.input-box input::placeholder {
+    color: var(--text-dim-color);
+}
+
+.icon-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-dim-color);
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 4px;
+    transition: color 0.2s;
+}
+
+.icon-btn:hover {
+    color: var(--text-main-color);
+}
+
+#sendBtn {
+    background-color: var(--accent-primary);
+    color: #fff;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+
+#sendBtn:hover {
+    background-color: var(--accent-hover);
+}
+
+/* --- Markdown Render Styling inside Messages --- */
+.msg-bubble pre {
+    background-color: #121110 !important;
+    border: 1px solid var(--border-color);
+    padding: 16px !important;
+    border-radius: 10px !important;
+    overflow-x: auto;
+    font-family: 'Courier New', Courier, monospace !important;
+    font-size: 0.95rem !important;
+    margin: 12px 0;
+}
+
+.msg-bubble code {
+    font-family: 'Courier New', Courier, monospace !important;
+    background-color: rgba(255, 255, 255, 0.06);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
+
+.msg-bubble pre code {
+    background-color: transparent;
+    padding: 0;
+}
+
+.msg-bubble p {
+    margin-bottom: 14px;
+    font-size: 1.1rem; /* Increased */
+}
+
+.msg-bubble ul, .msg-bubble ol {
+    margin-left: 20px;
+    margin-bottom: 14px;
+}
+
+.msg-bubble li {
+    margin-bottom: 6px;
+    font-size: 1.1rem; /* Increased */
+}
+
+/* --- Generated Image Styling --- */
+.msg-bubble img {
+    max-width: 100%;
+    border-radius: 10px;
+    margin-top: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-color);
+}
+
+/* --- Voice Recording Pulse Effect --- */
+@keyframes pulse-mic {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.15); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.recording-pulse {
+    animation: pulse-mic 1.2s infinite;
+    color: var(--accent-primary) !important;
+}
