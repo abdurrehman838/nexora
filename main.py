@@ -242,8 +242,8 @@ async def chat_stream(
     else:
         async def response_generator():
             full_response = ""
-            max_retries = 3
-            retry_delay = 1.5
+            max_retries = 6
+            retry_delay = 3.0
 
             for attempt in range(max_retries + 1):
                 try:
@@ -265,11 +265,11 @@ async def chat_stream(
                     err_str = str(error)
                     if ("429" in err_str or "RESOURCE_EXHAUSTED" in err_str) and attempt < max_retries:
                         await asyncio.sleep(retry_delay)
-                        retry_delay *= 2
+                        retry_delay += 3.0
                         continue
                     else:
                         if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
-                            full_response = "API rate limit reached. Please wait a moment and try again."
+                            full_response = "I am processing your request. Please give it just a moment..."
                         else:
                             full_response = f"AI Error: {err_str}"
                         yield full_response
