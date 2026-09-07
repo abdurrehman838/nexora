@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexora AI Assistant</title>
+    <title>Abdur AI Assistant</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -16,8 +16,8 @@
         }
 
         body {
-            background-color: #1a1614; /* Warm brown-dark background */
-            color: #e6dfdc;
+            background-color: #121212;
+            color: #e3e3e3;
             height: 100vh;
             display: flex;
             overflow: hidden;
@@ -26,8 +26,8 @@
         /* Sidebar Styling */
         #sidebar {
             width: 280px;
-            background-color: #221d1a;
-            border-right: 1px solid #362f2b;
+            background-color: #181818;
+            border-right: 1px solid #282828;
             display: flex;
             flex-direction: column;
             transition: transform 0.3s ease;
@@ -40,23 +40,23 @@
 
         .sidebar-header h2 {
             font-size: 18px;
-            color: #f3ece9;
+            color: #f1f1f1;
             font-weight: 600;
             letter-spacing: 0.5px;
         }
 
         .sidebar-header p {
             font-size: 12px;
-            color: #b5a49e;
+            color: #8e8e8e;
             margin-top: 2px;
         }
 
         .new-chat-btn {
             margin: 12px 16px;
             padding: 12px;
-            background-color: #332b26;
-            color: #f3ece9;
-            border: 1px solid #4a3e37;
+            background-color: #212121;
+            color: #f1f1f1;
+            border: 1px solid #333333;
             border-radius: 12px;
             cursor: pointer;
             font-size: 14px;
@@ -68,7 +68,7 @@
         }
 
         .new-chat-btn:hover {
-            background-color: #423832;
+            background-color: #2a2a2a;
         }
 
         .session-list {
@@ -82,7 +82,7 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
-            color: #d1c5bf;
+            color: #b0b0b0;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -91,13 +91,13 @@
         }
 
         .session-item:hover, .session-item.active {
-            background-color: #332b26;
-            color: #f3ece9;
+            background-color: #262626;
+            color: #f1f1f1;
         }
 
         .sidebar-footer {
             padding: 16px;
-            border-top: 1px solid #362f2b;
+            border-top: 1px solid #282828;
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -106,7 +106,7 @@
         .footer-action-btn {
             background: none;
             border: none;
-            color: #d1c5bf;
+            color: #b0b0b0;
             cursor: pointer;
             font-size: 13px;
             text-align: left;
@@ -118,14 +118,14 @@
         }
 
         .footer-action-btn:hover {
-            color: #f3ece9;
+            color: #f1f1f1;
         }
 
         .footer-action-btn.clear-btn {
-            color: #e57373;
+            color: #ef5350;
         }
         .footer-action-btn.clear-btn:hover {
-            color: #ef9a9a;
+            color: #f44336;
         }
 
         /* Main Container */
@@ -133,7 +133,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            background-color: #1a1614;
+            background-color: #121212;
             position: relative;
             height: 100vh;
             overflow: hidden;
@@ -144,14 +144,14 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background-color: #1a1614;
+            background-color: #121212;
         }
 
         #mobileMenuBtn {
             display: none;
             background: none;
             border: none;
-            color: #e6dfdc;
+            color: #e3e3e3;
             font-size: 20px;
             cursor: pointer;
         }
@@ -182,13 +182,13 @@
         .welcome-screen h1 {
             font-size: 32px;
             font-weight: 600;
-            color: #f3ece9;
+            color: #f1f1f1;
             margin-bottom: 8px;
         }
 
         .welcome-screen p {
             font-size: 14px;
-            color: #b5a49e;
+            color: #8e8e8e;
             margin-bottom: 32px;
         }
 
@@ -201,8 +201,8 @@
         }
 
         .starter-card {
-            background-color: #26211e;
-            border: 1px solid #362f2b;
+            background-color: #1e1e1e;
+            border: 1px solid #2a2a2a;
             padding: 16px;
             border-radius: 12px;
             cursor: pointer;
@@ -211,13 +211,13 @@
         }
 
         .starter-card:hover {
-            background-color: #332b26;
-            border-color: #4a3e37;
+            background-color: #262626;
+            border-color: #383838;
         }
 
         .starter-card h4 {
             font-size: 14px;
-            color: #f3ece9;
+            color: #f1f1f1;
             margin-bottom: 4px;
             display: flex;
             align-items: center;
@@ -226,7 +226,7 @@
 
         .starter-card p {
             font-size: 12px;
-            color: #b5a49e;
+            color: #8e8e8e;
             margin: 0;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -250,13 +250,13 @@
         .message-content {
             padding: 14px 18px;
             border-radius: 16px;
-            background-color: #26211e;
-            color: #e6dfdc;
-            border: 1px solid #362f2b;
+            background-color: #1e1e1e;
+            color: #e3e3e3;
+            border: 1px solid #2a2a2a;
         }
 
         .message.user .message-content {
-            background-color: #5c3a21; /* Warm brown user bubble */
+            background-color: #d97706;
             color: #ffffff;
             border: none;
         }
@@ -276,8 +276,8 @@
         }
 
         .chat-input-box {
-            background-color: #26211e;
-            border: 1px solid #4a3e37;
+            background-color: #1e1e1e;
+            border: 1px solid #333333;
             border-radius: 16px;
             padding: 12px 16px;
             display: flex;
@@ -318,7 +318,7 @@
         .action-btn {
             background: none;
             border: none;
-            color: #d1c5bf;
+            color: #b0b0b0;
             cursor: pointer;
             font-size: 16px;
             padding: 6px;
@@ -330,12 +330,12 @@
         }
 
         .action-btn:hover {
-            background-color: #332b26;
+            background-color: #2a2a2a;
             color: #ffffff;
         }
 
         .send-btn {
-            background-color: #d97706; /* Warm amber/brown send button */
+            background-color: #d97706;
             color: #ffffff;
             border: none;
             width: 36px;
@@ -367,8 +367,8 @@
         }
 
         .modal-card {
-            background-color: #221d1a;
-            border: 1px solid #362f2b;
+            background-color: #181818;
+            border: 1px solid #282828;
             padding: 36px;
             border-radius: 20px;
             width: 100%;
@@ -379,14 +379,14 @@
 
         .modal-card h2 {
             font-size: 24px;
-            color: #f3ece9;
+            color: #f1f1f1;
             margin-bottom: 6px;
             font-weight: 600;
         }
 
         .modal-card p {
             font-size: 14px;
-            color: #b5a49e;
+            color: #8e8e8e;
             margin-bottom: 24px;
         }
 
@@ -398,7 +398,7 @@
         .form-group label {
             display: block;
             font-size: 13px;
-            color: #b5a49e;
+            color: #8e8e8e;
             margin-bottom: 6px;
             font-weight: 500;
         }
@@ -406,8 +406,8 @@
         .form-group input {
             width: 100%;
             padding: 12px 16px;
-            background-color: #1a1614;
-            border: 1px solid #4a3e37;
+            background-color: #121212;
+            border: 1px solid #333333;
             border-radius: 10px;
             color: #ffffff;
             font-size: 14px;
@@ -430,7 +430,7 @@
         .switch-auth {
             margin-top: 20px;
             font-size: 13px;
-            color: #b5a49e;
+            color: #8e8e8e;
         }
 
         .switch-auth a {
@@ -467,7 +467,7 @@
     <div id="authModal" class="modal-overlay hidden">
         <div class="modal-card">
             <h2 id="authTitle">Welcome Back</h2>
-            <p id="authSubtitle">Login to your Nexora AI account</p>
+            <p id="authSubtitle">Login to your Abdur AI account</p>
             <div class="form-group">
                 <label>Username</label>
                 <input type="text" id="authUsername" placeholder="Enter username">
@@ -486,7 +486,7 @@
     <!-- Sidebar -->
     <div id="sidebar">
         <div class="sidebar-header">
-            <h2>Nexora AI</h2>
+            <h2>Abdur AI</h2>
             <p>Your Personal AI Assistant</p>
         </div>
         <button class="new-chat-btn" onclick="createNewSession()">
@@ -500,7 +500,7 @@
             <button class="footer-action-btn clear-btn" onclick="clearHistory()">
                 <i class="fa-solid fa-trash-can"></i> Clear history
             </button>
-            <div style="font-size: 13px; color: #b5a49e; display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+            <div style="font-size: 13px; color: #8e8e8e; display: flex; align-items: center; gap: 8px; margin-top: 4px;">
                 <i class="fa-solid fa-user-circle"></i> <span id="currentUserDisplay">Muhammad Abdur Rehman</span>
             </div>
         </div>
@@ -511,7 +511,7 @@
         <div class="chat-header">
             <div style="display: flex; align-items: center; gap: 12px;">
                 <button id="mobileMenuBtn" onclick="toggleMobileSidebar()"><i class="fa-solid fa-bars"></i></button>
-                <span id="currentChatTitle" style="font-weight: 500; font-size: 15px; color: #b5a49e;">New Chat</span>
+                <span id="currentChatTitle" style="font-weight: 500; font-size: 15px; color: #8e8e8e;">New Chat</span>
             </div>
         </div>
 
@@ -542,7 +542,7 @@
 
         <div class="chat-input-container">
             <div class="chat-input-box">
-                <textarea id="messageInput" rows="1" placeholder="Write a message or ask anything..." onkeydown="handleKeypress(event)"></textarea>
+                <textarea id="messageInput" rows="1" placeholder="Write a message or speak..." onkeydown="handleKeypress(event)"></textarea>
                 <div class="chat-input-actions">
                     <div class="action-buttons">
                         <label class="action-btn" title="Attach File">
@@ -566,7 +566,7 @@
         let attachedFile = null;
 
         document.addEventListener("DOMContentLoaded", () => {
-            const loggedUser = localStorage.getItem("nexora_user");
+            const loggedUser = localStorage.getItem("abdur_ai_user");
             if (!loggedUser) {
                 document.getElementById("authModal").classList.remove("hidden");
             } else {
@@ -579,7 +579,7 @@
             e.preventDefault();
             isSignupMode = !isSignupMode;
             document.getElementById("authTitle").innerText = isSignupMode ? "Create Account" : "Welcome Back";
-            document.getElementById("authSubtitle").innerText = isSignupMode ? "Sign up for Nexora AI" : "Login to your Nexora AI account";
+            document.getElementById("authSubtitle").innerText = isSignupMode ? "Sign up for Abdur AI" : "Login to your Abdur AI account";
             document.getElementById("authSubmitBtn").innerText = isSignupMode ? "Sign Up" : "Login";
             document.getElementById("switchAuthText").innerHTML = isSignupMode ? 
                 'Already have an account? <a href="#" onclick="toggleAuthMode(event)">Login</a>' :
@@ -602,7 +602,7 @@
                 });
                 const data = await res.json();
                 if (data.success) {
-                    localStorage.setItem("nexora_user", username);
+                    localStorage.setItem("abdur_ai_user", username);
                     document.getElementById("currentUserDisplay").innerText = username;
                     document.getElementById("authModal").classList.add("hidden");
                     loadSessions();
@@ -735,7 +735,7 @@
         function toggleWebSearch() {
             webSearchActive = !webSearchActive;
             const btn = document.getElementById("webSearchBtn");
-            btn.style.color = webSearchActive ? "#d97706" : "#d1c5bf";
+            btn.style.color = webSearchActive ? "#d97706" : "#b0b0b0";
         }
 
         function handleFileSelect() {
@@ -835,9 +835,9 @@
 
         function exportChatMarkdown() {
             const messages = document.querySelectorAll(".message");
-            let md = "# Nexora AI Chat Export\n\n";
+            let md = "# Abdur AI Chat Export\n\n";
             messages.forEach(m => {
-                const role = m.classList.contains("user") ? "**You**" : "**Nexora AI**";
+                const role = m.classList.contains("user") ? "**You**" : "**Abdur AI**";
                 const content = m.querySelector(".message-content").innerText;
                 md += `${role}:\n${content}\n\n---\n\n`;
             });
@@ -845,7 +845,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.href = url;
-            a.download = "nexora_chat.md";
+            a.download = "abdur_ai_chat.md";
             a.click();
         }
 
