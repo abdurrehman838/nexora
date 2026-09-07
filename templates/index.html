@@ -580,6 +580,9 @@
                         <button class="action-btn" title="Web Search Toggle" id="webSearchBtn" onclick="toggleWebSearch()">
                             <i class="fa-solid fa-globe"></i>
                         </button>
+                        <button class="action-btn" title="Voice Input" id="voiceBtn" onclick="toggleVoiceInput()">
+                            <i class="fa-solid fa-microphone"></i>
+                        </button>
                     </div>
                     <button class="send-btn" onclick="sendMessage()"><i class="fa-solid fa-arrow-up" style="color: #ffffff;"></i></button>
                 </div>
@@ -592,6 +595,8 @@
         let isSignupMode = false;
         let webSearchActive = false;
         let attachedFile = null;
+        let recognition = null;
+        let isRecording = false;
 
         document.addEventListener("DOMContentLoaded", () => {
             const loggedUser = localStorage.getItem("nexora_user") || localStorage.getItem("abdur_ai_user");
@@ -668,7 +673,6 @@
         }
 
         async function createNewSession() {
-            // Prevent spamming new sessions if we are already on an empty/welcome chat screen
             const welcomeScreen = document.getElementById("welcomeScreen");
             if (welcomeScreen) {
                 document.getElementById("messageInput").focus();
@@ -771,6 +775,58 @@
             webSearchActive = !webSearchActive;
             const btn = document.getElementById("webSearchBtn");
             btn.style.color = webSearchActive ? "#d97706" : "#b0b0b0";
+        }
+
+        function toggleVoiceInput() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                alert("Speech recognition is not supported in this browser. Please use Google Chrome or Microsoft Edge.");
+                return;
+            }
+
+            const micBtn = document.getElementById("voiceBtn");
+
+            if (isRecording) {
+                if (recognition) recognition.stop();
+                return;
+            }
+
+            recognition = new SpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            recognition.onstart = () => {
+                isRecording = true;
+                micBtn.style.color = "#ef4444";
+                micBtn.title = "Listening...";
+            };
+
+            recognition.onresult = (event) => {
+                const speechText = event.results[0][0].transcript;
+                const input = document.getElementById("messageInput");
+                input.value = input.value ? input.value + " " + speechText : speechText;
+            };
+
+            recognition.onerror = (event) => {
+                console.error("Speech recognition error:", event.error);
+                stopVoiceRecording();
+            };
+
+            recognition.onend = () => {
+                stopVoiceRecording();
+            };
+
+            recognition.start();
+        }
+
+        function stopVoiceRecording() {
+            isRecording = false;
+            const micBtn = document.getElementById("voiceBtn");
+            if (micBtn) {
+                micBtn.style.color = "#b0b0b0";
+                micBtn.title = "Voice Input";
+            }
         }
 
         function handleFileSelect() {
