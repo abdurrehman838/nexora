@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abdur AI Assistant</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
+    <title>Nexora AI</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%23121212%22/><path d=%22M30 70V30c0-3 2-5 5-5h6c3 0 5 2 5 5v20l22-25c2-2 5-2 7-1s3 4 3 7v40c0 3-2 5-5 5h-6c-3 0-5-2-5-5V50L37 75c-2 2-5 2-7 1s-3-4-3-7z%22 fill=%22%23d97706%22/><path d=%22M78 20l2 6 6 2-6 2-2 6-2-6-6-2 6-2 2-6z%22 fill=%22%23fbbf24%22/></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -43,15 +43,21 @@
         }
 
         .sidebar-logo {
-            width: 36px;
-            height: 36px;
-            background-color: #d97706;
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, #1e1e1e 0%, #121212 100%);
+            border: 1px solid #333333;
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #ffffff;
-            font-size: 18px;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+
+        .sidebar-logo svg {
+            width: 24px;
+            height: 24px;
         }
 
         .sidebar-header h2 {
@@ -483,7 +489,7 @@
     <div id="authModal" class="modal-overlay hidden">
         <div class="modal-card">
             <h2 id="authTitle">Welcome Back</h2>
-            <p id="authSubtitle">Login to your Abdur AI account</p>
+            <p id="authSubtitle">Login to your Nexora AI account</p>
             <div class="form-group">
                 <label>Username</label>
                 <input type="text" id="authUsername" placeholder="Enter username">
@@ -503,11 +509,14 @@
     <div id="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">
-                <i class="fa-solid fa-robot"></i>
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M30 70V30c0-3 2-5 5-5h6c3 0 5 2 5 5v20l22-25c2-2 5-2 7-1s3 4 3 7v40c0 3-2 5-5 5h-6c-3 0-5-2-5-5V50L37 75c-2 2-5 2-7 1s-3-4-3-7z" fill="#d97706"/>
+                    <path d="M78 20l2 6 6 2-6 2-2 6-2-6-6-2 6-2 2-6z" fill="#fbbf24"/>
+                </svg>
             </div>
             <div>
-                <h2>Abdur AI</h2>
-                <p>Your Personal AI Assistant</p>
+                <h2>Nexora AI</h2>
+                <p>Your Intelligent AI Assistant</p>
             </div>
         </div>
         <button class="new-chat-btn" onclick="createNewSession()">
@@ -587,7 +596,7 @@
         let attachedFile = null;
 
         document.addEventListener("DOMContentLoaded", () => {
-            const loggedUser = localStorage.getItem("abdur_ai_user");
+            const loggedUser = localStorage.getItem("nexora_user") || localStorage.getItem("abdur_ai_user");
             if (!loggedUser) {
                 document.getElementById("authModal").classList.remove("hidden");
             } else {
@@ -600,7 +609,7 @@
             e.preventDefault();
             isSignupMode = !isSignupMode;
             document.getElementById("authTitle").innerText = isSignupMode ? "Create Account" : "Welcome Back";
-            document.getElementById("authSubtitle").innerText = isSignupMode ? "Sign up for Abdur AI" : "Login to your Abdur AI account";
+            document.getElementById("authSubtitle").innerText = isSignupMode ? "Sign up for Nexora AI" : "Login to your Nexora AI account";
             document.getElementById("authSubmitBtn").innerText = isSignupMode ? "Sign Up" : "Login";
             document.getElementById("switchAuthText").innerHTML = isSignupMode ? 
                 'Already have an account? <a href="#" onclick="toggleAuthMode(event)">Login</a>' :
@@ -623,7 +632,7 @@
                 });
                 const data = await res.json();
                 if (data.success) {
-                    localStorage.setItem("abdur_ai_user", username);
+                    localStorage.setItem("nexora_user", username);
                     document.getElementById("currentUserDisplay").innerText = username;
                     document.getElementById("authModal").classList.add("hidden");
                     loadSessions();
@@ -856,9 +865,9 @@
 
         function exportChatMarkdown() {
             const messages = document.querySelectorAll(".message");
-            let md = "# Abdur AI Chat Export\n\n";
+            let md = "# Nexora AI Chat Export\n\n";
             messages.forEach(m => {
-                const role = m.classList.contains("user") ? "**You**" : "**Abdur AI**";
+                const role = m.classList.contains("user") ? "**You**" : "**Nexora AI**";
                 const content = m.querySelector(".message-content").innerText;
                 md += `${role}:\n${content}\n\n---\n\n`;
             });
@@ -866,7 +875,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.href = url;
-            a.download = "abdur_ai_chat.md";
+            a.download = "nexora_ai_chat.md";
             a.click();
         }
 
