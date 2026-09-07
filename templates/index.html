@@ -668,6 +668,13 @@
         }
 
         async function createNewSession() {
+            // Prevent spamming new sessions if we are already on an empty/welcome chat screen
+            const welcomeScreen = document.getElementById("welcomeScreen");
+            if (welcomeScreen) {
+                document.getElementById("messageInput").focus();
+                return;
+            }
+
             try {
                 const res = await fetch("/sessions", { method: "POST" });
                 const data = await res.json();
