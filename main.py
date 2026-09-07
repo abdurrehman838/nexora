@@ -242,8 +242,8 @@ async def chat_stream(
     else:
         async def response_generator():
             full_response = ""
-            max_retries = 2
-            retry_delay = 2.0
+            max_retries = 3
+            retry_delay = 1.5
 
             for attempt in range(max_retries + 1):
                 try:
@@ -269,7 +269,7 @@ async def chat_stream(
                         continue
                     else:
                         if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
-                            full_response = "Ji farmayiye, main hazir hoon! Dobara message bhejiye."
+                            full_response = "API rate limit reached. Please wait a moment and try again."
                         else:
                             full_response = f"AI Error: {err_str}"
                         yield full_response
