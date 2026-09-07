@@ -242,25 +242,40 @@ async def chat_stream(
     else:
         async def response_generator():
             full_response = ""
-            try:
-                if client:
-                    response_stream = client.models.generate_content_stream(
-                        model="gemini-3.6-flash",
-                        contents=message,
-                    )
-                    for chunk in response_stream:
-                        if chunk.text:
-                            full_response += chunk.text
-                            yield chunk.text
-                else:
-                    full_response = "Error: Gemini client not initialized."
-                    yield full_response
-            except Exception as error:
-                err_str = str(error)
-                if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
-                    full_response = "API rate limit reached. Please wait a minute or try using a fresh Gemini API key."
-                else:
-                    full_response = f"AI Error: {err_str}"
+            models_to_try = [
+                "gemini-2.5-flash",
+                "gemini-1.5-flash",
+                "gemini-2.0-flash",
+                "gemini-3.6-flash",
+                "gemini-1.5-pro"
+            ]
+            
+            success = False
+            for model_name in models_to_try:
+                try:
+                    if client:
+                        response_stream = client.models.generate_content_stream(
+                            model=model_name,
+                            contents=message,
+                        )
+                        for chunk in response_stream:
+                            if chunk.text:
+                                full_response += chunk.text
+                                yield chunk.text
+                        success = True
+                        break
+                except Exception as error:
+                    err_str = str(error)
+                    if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
+                        continue
+                    else:
+                        full_response = f"AI Error: {err_str}"
+                        yield full_response
+                        success = True
+                        break
+            
+            if not success:
+                full_response = "All model quotas are temporarily busy. Please try again in a moment."
                 yield full_response
 
             try:
