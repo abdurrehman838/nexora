@@ -242,38 +242,22 @@ async def chat_stream(
     else:
         async def response_generator():
             full_response = ""
-            max_retries = 6
-            retry_delay = 3.0
-
-            for attempt in range(max_retries + 1):
-                try:
-                    if client:
-                        response_stream = client.models.generate_content_stream(
-                            model="gemini-3.6-flash",
-                            contents=message,
-                        )
-                        for chunk in response_stream:
-                            if chunk.text:
-                                full_response += chunk.text
-                                yield chunk.text
-                        break
-                    else:
-                        full_response = "Error: Gemini client not initialized."
-                        yield full_response
-                        break
-                except Exception as error:
-                    err_str = str(error)
-                    if ("429" in err_str or "RESOURCE_EXHAUSTED" in err_str) and attempt < max_retries:
-                        await asyncio.sleep(retry_delay)
-                        retry_delay += 3.0
-                        continue
-                    else:
-                        if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
-                            full_response = "I am processing your request. Please give it just a moment..."
-                        else:
-                            full_response = f"AI Error: {err_str}"
-                        yield full_response
-                        break
+            try:
+                if client:
+                    response_stream = client.models.generate_content_stream(
+                        model="gemini-3.6-flash",
+                        contents=message,
+                    )
+                    for chunk in response_stream:
+                        if chunk.text:
+                            full_response += chunk.text
+                            yield chunk.text
+                else:
+                    full_response = "Error: Gemini client not initialized."
+                    yield full_response
+            except Exception as error:
+                full_response = f"AI Error: {str(error)}"
+                yield full_response
 
             try:
                 conn_inner = sqlite3.connect(DB_FILE)
