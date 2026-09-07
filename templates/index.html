@@ -3,82 +3,808 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexora AI</title>
-    <link rel="icon" type="image/png" href="/static/logo.png">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Nexora - AI Assistant</title>
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Sidebar Styling */
+        #sidebar {
+            width: 260px;
+            background-color: #18181b;
+            border-right: 1px solid #27272a;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #27272a;
+        }
+
+        .sidebar-header h2 {
+            font-size: 18px;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .new-chat-btn {
+            margin: 15px;
+            padding: 10px;
+            background-color: #27272a;
+            color: #ffffff;
+            border: 1px solid #3f3f46;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .new-chat-btn:hover {
+            background-color: #3f3f46;
+        }
+
+        .session-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .session-item {
+            padding: 10px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #a1a1aa;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 5px;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .session-item:hover, .session-item.active {
+            background-color: #27272a;
+            color: #ffffff;
+        }
+
+        .sidebar-footer {
+            padding: 15px;
+            border-top: 1px solid #27272a;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .user-info {
+            font-size: 13px;
+            color: #d4d4d8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: #ef4444;
+            cursor: pointer;
+            font-size: 13px;
+            text-align: left;
+            padding: 5px 0;
+        }
+
+        /* Main Chat Area */
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #121212;
+            position: relative;
+            width: 100%;
+        }
+
+        .chat-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #27272a;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #18181b;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #mobileMenuBtn {
+            display: none;
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .message {
+            display: flex;
+            gap: 15px;
+            max-width: 80% ;
+            line-height: 1.5;
+            font-size: 15px;
+        }
+
+        .message.user {
+            margin-left: auto;
+            flex-direction: row-reverse;
+        }
+
+        .message-content {
+            padding: 12px 16px;
+            border-radius: 12px;
+            background-color: #27272a;
+            color: #f4f4f5;
+        }
+
+        .message.user .message-content {
+            background-color: #3b82f6;
+            color: #ffffff;
+        }
+
+        .message img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        /* Input Area */
+        .chat-input-container {
+            padding: 20px;
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .chat-input-box {
+            background-color: #18181b;
+            border: 1px solid #3f3f46;
+            border-radius: 12px;
+            padding: 10px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chat-input-box textarea {
+            width: 100%;
+            background: none;
+            border: none;
+            color: #ffffff;
+            resize: none;
+            outline: none;
+            font-size: 15px;
+            max-height: 150px;
+        }
+
+        .chat-input-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: #a1a1aa;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 5px;
+            transition: color 0.2s;
+        }
+
+        .action-btn:hover {
+            color: #ffffff;
+        }
+
+        .send-btn {
+            background-color: #d97706;
+            color: #ffffff;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .send-btn:hover {
+            background-color: #b45309;
+        }
+
+        /* Modal Overlay for Login/Signup */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-card {
+            background-color: #1e1e24;
+            border: 1px solid #2d2d38;
+            padding: 30px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        .modal-logo {
+            width: 60px;
+            height: 60px;
+            background-color: transparent;
+            border-radius: 12px;
+            margin: 0 auto 15px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .modal-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+
+        .modal-card h2 {
+            font-size: 22px;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+
+        .modal-card p {
+            font-size: 14px;
+            color: #9ca3af;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            color: #d1d5db;
+            margin-bottom: 6px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background-color: #121217;
+            border: 1px solid #374151;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus {
+            border-color: #d97706;
+        }
+
+        .modal-btn {
+            width: 100%;
+            background-color: #d97706;
+            color: #ffffff;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.2s;
+        }
+
+        .modal-btn:hover {
+            background-color: #b45309;
+        }
+
+        .switch-auth {
+            margin-top: 20px;
+            font-size: 13px;
+            color: #9ca3af;
+        }
+
+        .switch-auth a {
+            color: #d97706;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .switch-auth a:hover {
+            text-decoration: underline;
+        }
+
+        /* Google Button Styling */
+        .google-btn {
+            width: 100%;
+            background-color: #ffffff;
+            color: #222222;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: background-color 0.2s;
+            margin-top: 15px;
+        }
+
+        .google-btn:hover {
+            background-color: #f1f1f1;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: #6b7280;
+            margin: 20px 0;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #374151;
+        }
+
+        .divider::before {
+            margin-right: 10px;
+        }
+
+        .divider::after {
+            margin-left: 10px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Mobile Responsive Media Query */
+        @media (max-width: 768px) {
+            #sidebar {
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                transform: translateX(-100%);
+            }
+            #sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            #mobileMenuBtn {
+                display: block;
+            }
+        }
+    </style>
 </head>
-<body class="bg-[#121212] text-gray-100 h-screen flex overflow-hidden">
+<body>
+
+    <!-- Auth Modal (Login / Signup) -->
+    <div id="authModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-logo">
+                <img src="/static/logo.png" alt="Nexora Logo">
+            </div>
+            <h2 id="modalTitle">Welcome to Nexora</h2>
+            <p id="modalSubtitle">Please login or sign up to continue</p>
+            
+            <form id="authForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="authUsername" placeholder="e.g. Ahmed" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="authPassword" placeholder="••••••••" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="modal-btn" id="authSubmitBtn">Login</button>
+            </form>
+
+            <div class="divider">or</div>
+
+            <!-- Continue with Google Button -->
+            <button type="button" id="googleLoginBtn" class="google-btn">
+                <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.46-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                </svg>
+                Continue with Google
+            </button>
+
+            <div class="switch-auth">
+                <span id="switchText">Don't have an account?</span> 
+                <a href="#" id="switchModeBtn">Sign up</a>
+            </div>
+        </div>
+    </div>
+
     <!-- Sidebar -->
-    <aside class="w-72 bg-[#171717] border-r border-gray-800 flex flex-col justify-between p-4">
-        <div>
-            <div class="flex items-center gap-3 mb-6 px-2">
-                <img src="/static/logo.png" alt="Logo" class="w-8 h-8 rounded-lg object-contain">
-                <h1 class="text-xl font-bold tracking-wide text-white">Nexora AI</h1>
-            </div>
-            <button onclick="location.reload()" class="w-full flex items-center justify-center gap-2 bg-[#212121] hover:bg-[#2f2f2f] border border-gray-700 py-2.5 px-4 rounded-xl text-sm font-medium transition mb-4 text-white">
-                <i class="fa-solid fa-plus"></i> New chat
-            </button>
-            <div class="text-xs font-semibold text-gray-500 uppercase px-2 mb-2">Recent Chats</div>
-            <div id="chat-history-list" class="space-y-1 overflow-y-auto max-h-[calc(100vh-280px)] pr-1"></div>
+    <div id="sidebar">
+        <div class="sidebar-header">
+            <h2>Nexora AI</h2>
         </div>
-        <div class="border-t border-gray-800 pt-4 space-y-2">
-            <button onclick="alert('Exporting chat...')" class="w-full flex items-center gap-2 text-sm text-gray-400 hover:text-white px-2 py-1.5 rounded-lg hover:bg-gray-800 transition">
-                <i class="fa-solid fa-download"></i> Export Chat (.md)
-            </button>
-            <button onclick="fetch('/clear-history', {method: 'POST'}).then(() => location.reload())" class="w-full flex items-center gap-2 text-sm text-red-400 hover:text-red-300 px-2 py-1.5 rounded-lg hover:bg-gray-800 transition">
-                <i class="fa-solid fa-trash"></i> Clear history
-            </button>
-            <div class="flex items-center justify-between px-2 pt-2 border-t border-gray-800 text-sm">
-                <span class="text-gray-300 font-medium">Muhammad</span>
-                <a href="/logout" class="text-red-400 hover:text-red-300 text-xs"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
-            </div>
+        <button class="new-chat-btn" id="newChatBtn">
+            <i class="fa-solid fa-plus"></i> New Chat
+        </button>
+        <div class="session-list" id="sessionList">
+            <!-- Sessions will be loaded here -->
         </div>
-    </aside>
+        <div class="sidebar-footer">
+            <div class="user-info" id="userDisplayInfo">
+                <i class="fa-solid fa-user-circle"></i> <span id="currentUsername">Guest</span>
+            </div>
+            <button class="logout-btn" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+        </div>
+    </div>
 
-    <!-- Main Content Area -->
-    <main class="flex-1 flex flex-col justify-between relative bg-[#121212]">
-        <div id="main-chat-container" class="flex-1 overflow-y-auto p-6 flex flex-col items-center justify-center">
-            <div id="welcome-screen" class="w-full max-w-3xl text-center space-y-6">
-                <h2 class="text-3xl font-semibold text-gray-100">Hi Muhammad! How can I help you today?</h2>
-                <p class="text-gray-400 text-sm">Choose a starter prompt below or type your custom query:</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 text-left">
-                    <div class="p-4 bg-[#1e1e1e] border border-gray-800 rounded-xl cursor-pointer hover:border-gray-700 transition">
-                        <div class="text-sm font-medium text-purple-400 mb-1"><i class="fa-solid fa-atom mr-2"></i>Explain Quantum Computing</div>
-                        <div class="text-xs text-gray-400">Learn qubits and superposition basics.</div>
-                    </div>
-                    <div class="p-4 bg-[#1e1e1e] border border-gray-800 rounded-xl cursor-pointer hover:border-gray-700 transition">
-                        <div class="text-sm font-medium text-blue-400 mb-1"><i class="fa-solid fa-code mr-2"></i>Python Web Scraper</div>
-                        <div class="text-xs text-gray-400">BeautifulSoup & requests script.</div>
-                    </div>
-                    <div class="p-4 bg-[#1e1e1e] border border-gray-800 rounded-xl cursor-pointer hover:border-gray-700 transition">
-                        <div class="text-sm font-medium text-orange-400 mb-1"><i class="fa-solid fa-bug mr-2"></i>Debug ML Pipeline</div>
-                        <div class="text-xs text-gray-400">Optimize model training & metrics.</div>
-                    </div>
-                    <div class="p-4 bg-[#1e1e1e] border border-gray-800 rounded-xl cursor-pointer hover:border-gray-700 transition">
-                        <div class="text-sm font-medium text-green-400 mb-1"><i class="fa-solid fa-chart-line mr-2"></i>Pandas Analytics Template</div>
-                        <div class="text-xs text-gray-400">Data visualization workflow.</div>
-                    </div>
-                </div>
+    <!-- Main Container -->
+    <div class="main-container">
+        <div class="chat-header">
+            <div class="header-left">
+                <button id="mobileMenuBtn" title="Toggle Menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <span id="welcomeGreeting" style="font-weight: 500; font-size: 15px;">Hi! How can I help you?</span>
             </div>
         </div>
 
-        <!-- Input Bar -->
-        <div class="p-4 bg-[#121212] flex justify-center">
-            <div class="w-full max-w-3xl bg-[#1e1e1e] border border-gray-700 rounded-2xl p-3 flex flex-col shadow-lg">
-                <textarea rows="1" placeholder="Write a message or speak..." class="w-full bg-transparent text-gray-100 placeholder-gray-500 focus:outline-none resize-none px-2 text-sm"></textarea>
-                <div class="flex items-center justify-between mt-2 px-2">
-                    <div class="flex items-center gap-3 text-gray-400">
-                        <button class="hover:text-white transition"><i class="fa-solid fa-plus text-base"></i></button>
-                        <button class="hover:text-white transition"><i class="fa-solid fa-globe text-base"></i></button>
-                        <button class="hover:text-white transition"><i class="fa-solid fa-microphone text-base"></i></button>
+        <div class="chat-messages" id="chatMessages">
+            <!-- Messages will appear here -->
+        </div>
+
+        <div class="chat-input-container">
+            <div class="chat-input-box">
+                <textarea id="messageInput" rows="1" placeholder="Write a message or ask anything..."></textarea>
+                <div class="chat-input-actions">
+                    <div class="action-buttons">
+                        <label class="action-btn" title="Upload File">
+                            <i class="fa-solid fa-plus"></i>
+                            <input type="file" id="fileInput" class="hidden">
+                        </label>
+                        <button class="action-btn" id="webSearchBtn" title="Web Search"><i class="fa-solid fa-globe"></i></button>
                     </div>
-                    <button class="bg-amber-600 hover:bg-amber-500 text-white w-8 h-8 rounded-full flex items-center justify-center transition shadow">
-                        <i class="fa-solid fa-arrow-up text-sm"></i>
-                    </button>
+                    <button class="send-btn" id="sendBtn"><i class="fa-solid fa-arrow-up"></i></button>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        let currentSessionId = null;
+        let isSignupMode = false;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            checkAuth();
+            loadSessions();
+            setupEventListeners();
+            setupMobileSidebar();
+        });
+
+        function checkAuth() {
+            const user = localStorage.getItem("nexora_user");
+            if (user) {
+                document.getElementById("authModal").classList.add("hidden");
+                document.getElementById("currentUsername").textContent = user;
+                document.getElementById("welcomeGreeting").textContent = `Welcome back, ${user}! How can I help you?`;
+            } else {
+                document.getElementById("authModal").classList.remove("hidden");
+            }
+        }
+
+        function setupMobileSidebar() {
+            const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+            const sidebar = document.getElementById("sidebar");
+            
+            if (mobileMenuBtn && sidebar) {
+                mobileMenuBtn.addEventListener("click", () => {
+                    sidebar.classList.toggle("mobile-open");
+                });
+
+                // Close sidebar automatically when a session is clicked on mobile view
+                document.getElementById("sessionList").addEventListener("click", (e) => {
+                    if (window.innerWidth <= 768 && e.target.classList.contains("session-item")) {
+                        sidebar.classList.remove("mobile-open");
+                    }
+                });
+            }
+        }
+
+        function setupEventListeners() {
+            // Auth Mode Switcher
+            document.getElementById("switchModeBtn").addEventListener("click", (e) => {
+                e.preventDefault();
+                isSignupMode = !isSignupMode;
+                const title = document.getElementById("modalTitle");
+                const subtitle = document.getElementById("modalSubtitle");
+                const submitBtn = document.getElementById("authSubmitBtn");
+                const switchText = document.getElementById("switchText");
+                const switchBtn = document.getElementById("switchModeBtn");
+
+                if (isSignupMode) {
+                    title.textContent = "Create Account";
+                    subtitle.textContent = "Sign up to start chatting with Nexora";
+                    submitBtn.textContent = "Sign Up";
+                    switchText.textContent = "Already have an account?";
+                    switchBtn.textContent = "Login";
+                } else {
+                    title.textContent = "Welcome to Nexora";
+                    subtitle.textContent = "Please login or sign up to continue";
+                    submitBtn.textContent = "Login";
+                    switchText.textContent = "Don't have an account?";
+                    switchBtn.textContent = "Sign up";
+                }
+            });
+
+            // Auth Form Submit
+            document.getElementById("authForm").addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const username = document.getElementById("authUsername").value.trim();
+                const password = document.getElementById("authPassword").value;
+                const endpoint = isSignupMode ? "/api/signup" : "/api/login";
+
+                try {
+                    const response = await fetch(endpoint, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ username, password })
+                    });
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        const activeUser = data.username || username;
+                        localStorage.setItem("nexora_user", activeUser);
+                        document.getElementById("authModal").classList.add("hidden");
+                        checkAuth();
+                        if (!currentSessionId) createNewSession();
+                    } else {
+                        alert(data.message || "Authentication failed!");
+                    }
+                } catch (err) {
+                    alert("Network error occurred!");
+                }
+            });
+
+            // Google Login Simulation/Button
+            document.getElementById("googleLoginBtn").addEventListener("click", () => {
+                const googleUser = prompt("Enter your Google Account Username / Name:");
+                if (googleUser) {
+                    localStorage.setItem("nexora_user", googleUser);
+                    document.getElementById("authModal").classList.add("hidden");
+                    checkAuth();
+                    if (!currentSessionId) createNewSession();
+                }
+            });
+
+            // Logout
+            document.getElementById("logoutBtn").addEventListener("click", () => {
+                localStorage.removeItem("nexora_user");
+                location.reload();
+            });
+
+            // New Chat Button
+            document.getElementById("newChatBtn").addEventListener("click", () => {
+                createNewSession();
+                const sidebar = document.getElementById("sidebar");
+                if (window.innerWidth <= 768) sidebar.classList.remove("mobile-open");
+            });
+
+            // Send Message
+            document.getElementById("sendBtn").addEventListener("click", sendMessage);
+            document.getElementById("messageInput").addEventListener("keydown", (e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+        }
+
+        async function loadSessions() {
+            try {
+                const res = await fetch("/sessions");
+                const sessions = await res.json();
+                const sessionList = document.getElementById("sessionList");
+                sessionList.innerHTML = "";
+
+                if (sessions.length > 0) {
+                    sessions.forEach(s => {
+                        const div = document.createElement("div");
+                        div.className = `session-item ${s.id === currentSessionId ? 'active' : ''}`;
+                        div.textContent = s.title;
+                        div.onclick = () => loadMessages(s.id);
+                        sessionList.appendChild(div);
+                    });
+                    if (!currentSessionId) {
+                        loadMessages(sessions[0].id);
+                    }
+                } else {
+                    createNewSession();
+                }
+            } catch (e) {
+                console.error("Failed to load sessions");
+            }
+        }
+
+        async function createNewSession() {
+            try {
+                const res = await fetch("/sessions", { method: "POST" });
+                const data = await res.json();
+                currentSessionId = data.session_id;
+                document.getElementById("chatMessages").innerHTML = "";
+                loadSessions();
+            } catch (e) {
+                console.error("Failed to create session");
+            }
+        }
+
+        async function loadMessages(sessionId) {
+            currentSessionId = sessionId;
+            loadSessions();
+            try {
+                const res = await fetch(`/sessions/${sessionId}/messages`);
+                const messages = await res.json();
+                const container = document.getElementById("chatMessages");
+                container.innerHTML = "";
+                messages.forEach(m => {
+                    appendMessage(m.role, m.message, m.file_path);
+                });
+            } catch (e) {
+                console.error("Failed to load messages");
+            }
+        }
+
+        function appendMessage(role, text, filePath = null) {
+            const container = document.getElementById("chatMessages");
+            const msgDiv = document.createElement("div");
+            msgDiv.className = `message ${role}`;
+            
+            let fileHtml = filePath ? `<br><img src="${filePath}" alt="Attachment">` : '';
+            let formattedText = text
+                .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+                .replace(/!\[.*?\]\((.*?)\)/g, '<br><img src="$1" alt="Generated Image">');
+
+            msgDiv.innerHTML = `
+                <div class="message-content">
+                    ${formattedText}
+                    ${fileHtml}
+                </div>
+            `;
+            container.appendChild(msgDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById("messageInput");
+            const fileInput = document.getElementById("fileInput");
+            const message = input.value.trim();
+            const file = fileInput.files[0];
+
+            if (!message && !file) return;
+
+            appendMessage("user", message, file ? URL.createObjectURL(file) : null);
+            input.value = "";
+            fileInput.value = "";
+
+            const formData = new FormData();
+            formData.append("session_id", currentSessionId);
+            formData.append("message", message);
+            formData.append("web_search", false);
+            if (file) formData.append("file", file);
+
+            try {
+                const response = await fetch("/chat-stream", {
+                    method: "POST",
+                    body: formData
+                });
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let assistantMsg = "";
+                
+                const container = document.getElementById("chatMessages");
+                const msgDiv = document.createElement("div");
+                msgDiv.className = `message assistant`;
+                const contentDiv = document.createElement("div");
+                contentDiv.className = "message-content";
+                msgDiv.appendChild(contentDiv);
+                container.appendChild(msgDiv);
+
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+                    assistantMsg += decoder.decode(value, { stream: true });
+                    
+                    let formatted = assistantMsg
+                        .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+                        .replace(/!\[.*?\]\((.*?)\)/g, '<br><img src="$1" alt="Generated Image">');
+                    contentDiv.innerHTML = formatted;
+                    container.scrollTop = container.scrollHeight;
+                }
+                loadSessions();
+            } catch (e) {
+                console.error("Error sending message:", e);
+            }
+        }
+    </script>
 </body>
 </html>
