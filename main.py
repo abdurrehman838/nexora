@@ -201,9 +201,9 @@ async def chat_stream(
     else:
         try:
             if client:
-                # Updated to gemini-2.0-flash to resolve 404 error
+                # Updated to gemini-3.6-flash based on API recommendation
                 response = client.models.generate_content(
-                    model="gemini-2.0-flash",
+                    model="gemini-3.6-flash",
                     contents=message,
                 )
                 final_response = response.text
