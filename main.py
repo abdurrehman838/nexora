@@ -227,9 +227,9 @@ async def chat_stream(
     else:
         try:
             if client:
-                # Updated to the correct supported model name gemini-2.5-flash
+                # Updated to gemini-3.6-flash as requested by the API error log
                 response = client.models.generate_content(
-                    model="gemini-2.5-flash",
+                    model="gemini-3.6-flash",
                     contents=message,
                 )
                 final_response = response.text if response and response.text else "No response generated."
