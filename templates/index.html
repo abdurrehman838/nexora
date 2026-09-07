@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Abdur AI Assistant</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -36,6 +37,21 @@
 
         .sidebar-header {
             padding: 20px 20px 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-logo {
+            width: 36px;
+            height: 36px;
+            background-color: #d97706;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 18px;
         }
 
         .sidebar-header h2 {
@@ -486,8 +502,13 @@
     <!-- Sidebar -->
     <div id="sidebar">
         <div class="sidebar-header">
-            <h2>Abdur AI</h2>
-            <p>Your Personal AI Assistant</p>
+            <div class="sidebar-logo">
+                <i class="fa-solid fa-robot"></i>
+            </div>
+            <div>
+                <h2>Abdur AI</h2>
+                <p>Your Personal AI Assistant</p>
+            </div>
         </div>
         <button class="new-chat-btn" onclick="createNewSession()">
             <i class="fa-solid fa-plus"></i> New chat
