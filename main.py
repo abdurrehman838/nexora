@@ -198,33 +198,50 @@ async def chat_stream(
             f"![Generated Art]({generated_image_url})\n\n"
             f"*(Prompt: {message})*"
         )
-    else:
+        async def generate_image():
+            yield final_response
+            conn_inner = sqlite3.connect(DB_FILE)
+            conn_inner.execute(
+                "INSERT INTO messages (session_id, role, message, file_path) VALUES (?, ?, ?, ?)",
+                (session_id, "assistant", final_response, None),
+            )
+            conn_inner.commit()
+            conn_inner.close()
+        return StreamingResponse(generate_image(), media_type="text/plain")
+
+    async def generate_ai():
+        full_response = ""
         try:
             if client:
-                # Using gemini-3.6-flash which is supported by the API
-                response = client.models.generate_content(
+                # Using true streaming to bypass Vercel 10s timeout
+                response_stream = client.models.generate_content_stream(
                     model="gemini-3.6-flash",
                     contents=message,
                 )
-                final_response = response.text if response and response.text else "No response generated."
+                for chunk in response_stream:
+                    if chunk.text:
+                        full_response += chunk.text
+                        yield chunk.text
             else:
-                final_response = "**Client Error:** GenAI client not initialized."
+                full_response = "**Client Error:** GenAI client not initialized."
+                yield full_response
         except Exception as error:
-            final_response = f"Error processing query with AI model: {error}"
+            err_msg = f"\n\nError processing query with AI model: {error}"
+            full_response += err_msg
+            yield err_msg
 
-    async def generate():
-        for index in range(0, len(final_response), 30):
-            yield final_response[index:index + 30]
+        try:
+            conn_inner = sqlite3.connect(DB_FILE)
+            conn_inner.execute(
+                "INSERT INTO messages (session_id, role, message, file_path) VALUES (?, ?, ?, ?)",
+                (session_id, "assistant", full_response, None),
+            )
+            conn_inner.commit()
+            conn_inner.close()
+        except Exception:
+            pass
 
-        conn_inner = sqlite3.connect(DB_FILE)
-        conn_inner.execute(
-            "INSERT INTO messages (session_id, role, message, file_path) VALUES (?, ?, ?, ?)",
-            (session_id, "assistant", final_response, None),
-        )
-        conn_inner.commit()
-        conn_inner.close()
-
-    return StreamingResponse(generate(), media_type="text/plain")
+    return StreamingResponse(generate_ai(), media_type="text/plain")
 
 
 @app.post("/clear-history")
