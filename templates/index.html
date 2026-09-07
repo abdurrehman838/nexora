@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexora - AI Assistant</title>
-    <!-- Google Fonts & FontAwesome -->
+    <title>Nexora AI Assistant</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
-    
         * {
             box-sizing: border-box;
             margin: 0;
@@ -36,10 +35,7 @@
         }
 
         .sidebar-header {
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            padding: 20px 20px 10px 20px;
         }
 
         .sidebar-header h2 {
@@ -47,6 +43,12 @@
             color: #ffffff;
             font-weight: 600;
             letter-spacing: 0.5px;
+        }
+
+        .sidebar-header p {
+            font-size: 12px;
+            color: #8e918f;
+            margin-top: 2px;
         }
 
         .new-chat-btn {
@@ -61,7 +63,6 @@
             font-weight: 500;
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 10px;
             transition: background 0.2s;
         }
@@ -73,11 +74,11 @@
         .session-list {
             flex: 1;
             overflow-y: auto;
-            padding: 8px 12px;
+            padding: 8px 16px;
         }
 
         .session-item {
-            padding: 10px 14px;
+            padding: 10px 12px;
             border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
@@ -102,33 +103,32 @@
             gap: 10px;
         }
 
-        .user-info {
-            font-size: 13px;
-            color: #c4c7c5;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 500;
-        }
-
-        .logout-btn {
+        .footer-action-btn {
             background: none;
             border: none;
-            color: #f2b8b5;
+            color: #c4c7c5;
             cursor: pointer;
             font-size: 13px;
             text-align: left;
-            padding: 4px 0;
+            padding: 6px 0;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            transition: color 0.2s;
         }
 
-        .logout-btn:hover {
+        .footer-action-btn:hover {
+            color: #ffffff;
+        }
+
+        .footer-action-btn.clear-btn {
+            color: #f2b8b5;
+        }
+        .footer-action-btn.clear-btn:hover {
             color: #ffb4ab;
         }
 
-        /* Main Chat Area */
+        /* Main Container */
         .main-container {
             flex: 1;
             display: flex;
@@ -145,13 +145,6 @@
             align-items: center;
             justify-content: space-between;
             background-color: #131314;
-            border-bottom: 1px solid transparent;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
         }
 
         #mobileMenuBtn {
@@ -175,6 +168,75 @@
             margin: 0 auto;
         }
 
+        /* Welcome Screen */
+        .welcome-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .welcome-screen h1 {
+            font-size: 32px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, #8ab4f8, #c58af9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .welcome-screen p {
+            font-size: 14px;
+            color: #8e918f;
+            margin-bottom: 32px;
+        }
+
+        .starter-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .starter-card {
+            background-color: #1e1f20;
+            border: 1px solid #2e2f31;
+            padding: 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: left;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .starter-card:hover {
+            background-color: #2b2c2f;
+            border-color: #3c3d40;
+        }
+
+        .starter-card h4 {
+            font-size: 14px;
+            color: #ffffff;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .starter-card p {
+            font-size: 12px;
+            color: #8e918f;
+            margin: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Message Bubbles */
         .message {
             display: flex;
             gap: 16px;
@@ -214,7 +276,6 @@
             max-width: 850px;
             width: 100%;
             margin: 0 auto;
-            background: linear-gradient(180deg, rgba(19,19,20,0) 0%, #131314 40%);
         }
 
         .chat-input-box {
@@ -288,7 +349,6 @@
             align-items: center;
             justify-content: center;
             transition: background 0.2s;
-            font-weight: bold;
         }
 
         .send-btn:hover {
@@ -318,22 +378,6 @@
             max-width: 420px;
             box-shadow: 0 12px 32px rgba(0,0,0,0.6);
             text-align: center;
-        }
-
-        .modal-logo {
-            width: 64px;
-            height: 64px;
-            margin: 0 auto 16px auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            border-radius: 14px;
         }
 
         .modal-card h2 {
@@ -371,11 +415,6 @@
             color: #ffffff;
             font-size: 14px;
             outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .form-group input:focus {
-            border-color: #8ab4f8;
         }
 
         .modal-btn {
@@ -389,11 +428,6 @@
             font-weight: 600;
             cursor: pointer;
             margin-top: 8px;
-            transition: background-color 0.2s;
-        }
-
-        .modal-btn:hover {
-            background-color: #aecbfa;
         }
 
         .switch-auth {
@@ -408,55 +442,8 @@
             font-weight: 500;
         }
 
-        .switch-auth a:hover {
-            text-decoration: underline;
-        }
-
-        .google-btn {
-            width: 100%;
-            background-color: #ffffff;
-            color: #1f1f1f;
-            border: none;
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            transition: background-color 0.2s;
-            margin-top: 14px;
-        }
-
-        .google-btn:hover {
-            background-color: #f1f3f4;
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            text-align: center;
-            color: #8e918f;
-            margin: 18px 0;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .divider::before, .divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid #3c3d40;
-        }
-
-        .divider::before { margin-right: 12px; }
-        .divider::after { margin-left: 12px; }
-
         .hidden { display: none !important; }
 
-        /* Mobile Responsive */
         @media (max-width: 768px) {
             #sidebar {
                 position: fixed;
@@ -471,48 +458,30 @@
             #mobileMenuBtn {
                 display: block;
             }
+            .starter-cards {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Auth Modal (Login / Signup) -->
-    <div id="authModal" class="modal-overlay">
+    <!-- Auth Modal -->
+    <div id="authModal" class="modal-overlay hidden">
         <div class="modal-card">
-            <div class="modal-logo">
-                <img src="/static/logo.png" alt="Nexora Logo">
+            <h2 id="authTitle">Welcome Back</h2>
+            <p id="authSubtitle">Login to your Nexora AI account</p>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="authUsername" placeholder="Enter username">
             </div>
-            <h2 id="modalTitle">Welcome to Nexora</h2>
-            <p id="modalSubtitle">Please login or sign up to continue</p>
-            
-            <form id="authForm">
-                <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" id="authUsername" placeholder="e.g. Ahmed" required autocomplete="username">
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="authPassword" placeholder="••••••••" required autocomplete="current-password">
-                </div>
-                <button type="submit" class="modal-btn" id="authSubmitBtn">Login</button>
-            </form>
-
-            <div class="divider">or</div>
-
-            <!-- Continue with Google Button -->
-            <button type="button" id="googleLoginBtn" class="google-btn">
-                <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
-                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.46-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-                </svg>
-                Continue with Google
-            </button>
-
-            <div class="switch-auth">
-                <span id="switchText">Don't have an account?</span> 
-                <a href="#" id="switchModeBtn">Sign up</a>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="authPassword" placeholder="Enter password">
+            </div>
+            <button class="modal-btn" id="authSubmitBtn" onclick="handleAuth()">Login</button>
+            <div class="switch-auth" id="switchAuthText">
+                Don't have an account? <a href="#" onclick="toggleAuthMode(event)">Sign up</a>
             </div>
         </div>
     </div>
@@ -521,206 +490,157 @@
     <div id="sidebar">
         <div class="sidebar-header">
             <h2>Nexora AI</h2>
+            <p>Your Personal AI Assistant</p>
         </div>
-        <button class="new-chat-btn" id="newChatBtn">
-            <i class="fa-solid fa-plus"></i> New Chat
+        <button class="new-chat-btn" onclick="createNewSession()">
+            <i class="fa-solid fa-plus"></i> New chat
         </button>
         <div class="session-list" id="sessionList">
-            <!-- Sessions will be loaded here -->
+            <!-- Dynamic Sessions -->
         </div>
         <div class="sidebar-footer">
-            <div class="user-info" id="userDisplayInfo">
-                <i class="fa-solid fa-user-circle"></i> <span id="currentUsername">Guest</span>
+            <button class="footer-action-btn" onclick="exportChatMarkdown()">
+                <i class="fa-solid fa-download"></i> Export Chat (.md)
+            </button>
+            <button class="footer-action-btn clear-btn" onclick="clearHistory()">
+                <i class="fa-solid fa-trash-can"></i> Clear history
+            </button>
+            <div style="font-size: 13px; color: #c4c7c5; display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+                <i class="fa-solid fa-user-circle"></i> <span id="currentUserDisplay">Muhammad Abdur Rehman</span>
             </div>
-            <button class="logout-btn" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
         </div>
     </div>
 
-    <!-- Main Container -->
+    <!-- Main Chat Area -->
     <div class="main-container">
         <div class="chat-header">
-            <div class="header-left">
-                <button id="mobileMenuBtn" title="Toggle Menu">
-                    <i class="fa-solid fa-bars"></i>
-                </button>
-                <span id="welcomeGreeting" style="font-weight: 500; font-size: 15px;">Hi! How can I help you?</span>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <button id="mobileMenuBtn" onclick="toggleMobileSidebar()"><i class="fa-solid fa-bars"></i></button>
+                <span id="currentChatTitle" style="font-weight: 500; font-size: 15px; color: #c4c7c5;">New Chat</span>
             </div>
         </div>
 
         <div class="chat-messages" id="chatMessages">
-            <!-- Messages will appear here -->
+            <div class="welcome-screen" id="welcomeScreen">
+                <h1>Hi Muhammad! How can I help you today?</h1>
+                <p>Choose a starter prompt below or type your custom query:</p>
+                <div class="starter-cards">
+                    <div class="starter-card" onclick="sendStarterPrompt('Explain Quantum Computing clearly with examples.')">
+                        <h4><i class="fa-solid fa-atom" style="color: #8ab4f8;"></i> Explain Quantum Computing</h4>
+                        <p>Learn qubits and superposition concepts.</p>
+                    </div>
+                    <div class="starter-card" onclick="sendStarterPrompt('Write a Python web scraper using BeautifulSoup.')">
+                        <h4><i class="fa-solid fa-code" style="color: #c58af9;"></i> Python Web Scraper</h4>
+                        <p>BeautifulSoup & requests script.</p>
+                    </div>
+                    <div class="starter-card" onclick="sendStarterPrompt('Debug machine learning model training loss spikes.')">
+                        <h4><i class="fa-solid fa-bug" style="color: #ffb4ab;"></i> Debug ML Pipeline</h4>
+                        <p>Optimize model training & hyperparameters.</p>
+                    </div>
+                    <div class="starter-card" onclick="sendStarterPrompt('Create a Pandas analytics template for CSV exploration.')">
+                        <h4><i class="fa-solid fa-chart-line" style="color: #81c995;"></i> Pandas Analytics Template</h4>
+                        <p>Data visualization workflow.</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="chat-input-container">
             <div class="chat-input-box">
-                <textarea id="messageInput" rows="1" placeholder="Write a message or ask anything..."></textarea>
+                <textarea id="messageInput" rows="1" placeholder="Write a message or ask anything..." onkeydown="handleKeypress(event)"></textarea>
                 <div class="chat-input-actions">
                     <div class="action-buttons">
-                        <label class="action-btn" title="Upload File">
+                        <label class="action-btn" title="Attach File">
                             <i class="fa-solid fa-plus"></i>
-                            <input type="file" id="fileInput" class="hidden">
+                            <input type="file" id="fileInput" style="display: none;" onchange="handleFileSelect()">
                         </label>
-                        <button class="action-btn" id="webSearchBtn" title="Web Search"><i class="fa-solid fa-globe"></i></button>
+                        <button class="action-btn" title="Web Search Toggle" id="webSearchBtn" onclick="toggleWebSearch()">
+                            <i class="fa-solid fa-globe"></i>
+                        </button>
                     </div>
-                    <button class="send-btn" id="sendBtn"><i class="fa-solid fa-arrow-up"></i></button>
+                    <button class="send-btn" onclick="sendMessage()"><i class="fa-solid fa-arrow-up" style="color: #131314;"></i></button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- JavaScript Logic -->
     <script>
         let currentSessionId = null;
         let isSignupMode = false;
+        let webSearchActive = false;
+        let attachedFile = null;
 
         document.addEventListener("DOMContentLoaded", () => {
-            checkAuth();
-            loadSessions();
-            setupEventListeners();
-            setupMobileSidebar();
+            const loggedUser = localStorage.getItem("nexora_user");
+            if (!loggedUser) {
+                document.getElementById("authModal").classList.remove("hidden");
+            } else {
+                document.getElementById("currentUserDisplay").innerText = loggedUser;
+                loadSessions();
+            }
         });
 
-        function checkAuth() {
-            const user = localStorage.getItem("nexora_user");
-            if (user) {
-                document.getElementById("authModal").classList.add("hidden");
-                document.getElementById("currentUsername").textContent = user;
-                document.getElementById("welcomeGreeting").textContent = `Welcome back, ${user}! How can I help you?`;
-            } else {
-                document.getElementById("authModal").classList.remove("hidden");
-            }
+        function toggleAuthMode(e) {
+            e.preventDefault();
+            isSignupMode = !isSignupMode;
+            document.getElementById("authTitle").innerText = isSignupMode ? "Create Account" : "Welcome Back";
+            document.getElementById("authSubtitle").innerText = isSignupMode ? "Sign up for Nexora AI" : "Login to your Nexora AI account";
+            document.getElementById("authSubmitBtn").innerText = isSignupMode ? "Sign Up" : "Login";
+            document.getElementById("switchAuthText").innerHTML = isSignupMode ? 
+                'Already have an account? <a href="#" onclick="toggleAuthMode(event)">Login</a>' :
+                'Don\'t have an account? <a href="#" onclick="toggleAuthMode(event)">Sign up</a>';
         }
 
-        function setupMobileSidebar() {
-            const mobileMenuBtn = document.getElementById("mobileMenuBtn");
-            const sidebar = document.getElementById("sidebar");
-            
-            if (mobileMenuBtn && sidebar) {
-                mobileMenuBtn.addEventListener("click", () => {
-                    sidebar.classList.toggle("mobile-open");
-                });
-
-                // Close sidebar automatically when a session is clicked on mobile view
-                document.getElementById("sessionList").addEventListener("click", (e) => {
-                    if (window.innerWidth <= 768 && e.target.classList.contains("session-item")) {
-                        sidebar.classList.remove("mobile-open");
-                    }
-                });
+        async function handleAuth() {
+            const username = document.getElementById("authUsername").value.trim();
+            const password = document.getElementById("authPassword").value;
+            if (!username || !password) {
+                alert("Please fill in all fields");
+                return;
             }
-        }
-
-        function setupEventListeners() {
-            // Auth Mode Switcher
-            document.getElementById("switchModeBtn").addEventListener("click", (e) => {
-                e.preventDefault();
-                isSignupMode = !isSignupMode;
-                const title = document.getElementById("modalTitle");
-                const subtitle = document.getElementById("modalSubtitle");
-                const submitBtn = document.getElementById("authSubmitBtn");
-                const switchText = document.getElementById("switchText");
-                const switchBtn = document.getElementById("switchModeBtn");
-
-                if (isSignupMode) {
-                    title.textContent = "Create Account";
-                    subtitle.textContent = "Sign up to start chatting with Nexora";
-                    submitBtn.textContent = "Sign Up";
-                    switchText.textContent = "Already have an account?";
-                    switchBtn.textContent = "Login";
-                } else {
-                    title.textContent = "Welcome to Nexora";
-                    subtitle.textContent = "Please login or sign up to continue";
-                    submitBtn.textContent = "Login";
-                    switchText.textContent = "Don't have an account?";
-                    switchBtn.textContent = "Sign up";
-                }
-            });
-
-            // Auth Form Submit
-            document.getElementById("authForm").addEventListener("submit", async (e) => {
-                e.preventDefault();
-                const username = document.getElementById("authUsername").value.trim();
-                const password = document.getElementById("authPassword").value;
-                const endpoint = isSignupMode ? "/api/signup" : "/api/login";
-
-                try {
-                    const response = await fetch(endpoint, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ username, password })
-                    });
-                    const data = await response.json();
-                    
-                    if (data.success) {
-                        const activeUser = data.username || username;
-                        localStorage.setItem("nexora_user", activeUser);
-                        document.getElementById("authModal").classList.add("hidden");
-                        checkAuth();
-                        if (!currentSessionId) createNewSession();
-                    } else {
-                        alert(data.message || "Authentication failed!");
-                    }
-                } catch (err) {
-                    alert("Network error occurred!");
-                }
-            });
-
-            // Google Login Simulation/Button
-            document.getElementById("googleLoginBtn").addEventListener("click", () => {
-                const googleUser = prompt("Enter your Google Account Username / Name:");
-                if (googleUser) {
-                    localStorage.setItem("nexora_user", googleUser);
+            const endpoint = isSignupMode ? "/api/signup" : "/api/login";
+            try {
+                const res = await fetch(endpoint, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    localStorage.setItem("nexora_user", username);
+                    document.getElementById("currentUserDisplay").innerText = username;
                     document.getElementById("authModal").classList.add("hidden");
-                    checkAuth();
-                    if (!currentSessionId) createNewSession();
+                    loadSessions();
+                } else {
+                    alert(data.message || "Authentication failed");
                 }
-            });
-
-            // Logout
-            document.getElementById("logoutBtn").addEventListener("click", () => {
-                localStorage.removeItem("nexora_user");
-                location.reload();
-            });
-
-            // New Chat Button
-            document.getElementById("newChatBtn").addEventListener("click", () => {
-                createNewSession();
-                const sidebar = document.getElementById("sidebar");
-                if (window.innerWidth <= 768) sidebar.classList.remove("mobile-open");
-            });
-
-            // Send Message
-            document.getElementById("sendBtn").addEventListener("click", sendMessage);
-            document.getElementById("messageInput").addEventListener("keydown", (e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    sendMessage();
-                }
-            });
+            } catch (err) {
+                alert("Server error during authentication.");
+            }
         }
 
         async function loadSessions() {
             try {
                 const res = await fetch("/sessions");
                 const sessions = await res.json();
-                const sessionList = document.getElementById("sessionList");
-                sessionList.innerHTML = "";
-
+                const listEl = document.getElementById("sessionList");
+                listEl.innerHTML = "";
                 if (sessions.length > 0) {
                     sessions.forEach(s => {
                         const div = document.createElement("div");
                         div.className = `session-item ${s.id === currentSessionId ? 'active' : ''}`;
-                        div.textContent = s.title;
-                        div.onclick = () => loadMessages(s.id);
-                        sessionList.appendChild(div);
+                        div.innerText = s.title;
+                        div.onclick = () => selectSession(s.id, s.title);
+                        listEl.appendChild(div);
                     });
                     if (!currentSessionId) {
-                        loadMessages(sessions[0].id);
+                        selectSession(sessions[0].id, sessions[0].title);
                     }
                 } else {
                     createNewSession();
                 }
-            } catch (e) {
-                console.error("Failed to load sessions");
+            } catch (err) {
+                console.error("Error loading sessions:", err);
             }
         }
 
@@ -729,100 +649,213 @@
                 const res = await fetch("/sessions", { method: "POST" });
                 const data = await res.json();
                 currentSessionId = data.session_id;
-                document.getElementById("chatMessages").innerHTML = "";
-                loadSessions();
-            } catch (e) {
-                console.error("Failed to create session");
+                await loadSessions();
+                document.getElementById("chatMessages").innerHTML = `
+                    <div class="welcome-screen" id="welcomeScreen">
+                        <h1>Hi Muhammad! How can I help you today?</h1>
+                        <p>Choose a starter prompt below or type your custom query:</p>
+                        <div class="starter-cards">
+                            <div class="starter-card" onclick="sendStarterPrompt('Explain Quantum Computing clearly with examples.')">
+                                <h4><i class="fa-solid fa-atom" style="color: #8ab4f8;"></i> Explain Quantum Computing</h4>
+                                <p>Learn qubits and superposition concepts.</p>
+                            </div>
+                            <div class="starter-card" onclick="sendStarterPrompt('Write a Python web scraper using BeautifulSoup.')">
+                                <h4><i class="fa-solid fa-code" style="color: #c58af9;"></i> Python Web Scraper</h4>
+                                <p>BeautifulSoup & requests script.</p>
+                            </div>
+                            <div class="starter-card" onclick="sendStarterPrompt('Debug machine learning model training loss spikes.')">
+                                <h4><i class="fa-solid fa-bug" style="color: #ffb4ab;"></i> Debug ML Pipeline</h4>
+                                <p>Optimize model training & hyperparameters.</p>
+                            </div>
+                            <div class="starter-card" onclick="sendStarterPrompt('Create a Pandas analytics template for CSV exploration.')">
+                                <h4><i class="fa-solid fa-chart-line" style="color: #81c995;"></i> Pandas Analytics Template</h4>
+                                <p>Data visualization workflow.</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.getElementById("currentChatTitle").innerText = "New Chat";
+            } catch (err) {
+                console.error("Error creating session:", err);
             }
         }
 
-        async function loadMessages(sessionId) {
+        async function selectSession(sessionId, title) {
             currentSessionId = sessionId;
-            loadSessions();
+            document.getElementById("currentChatTitle").innerText = title;
+            document.querySelectorAll(".session-item").forEach(item => {
+                item.classList.toggle("active", item.innerText === title);
+            });
+
             try {
                 const res = await fetch(`/sessions/${sessionId}/messages`);
                 const messages = await res.json();
                 const container = document.getElementById("chatMessages");
                 container.innerHTML = "";
-                messages.forEach(m => {
-                    appendMessage(m.role, m.message, m.file_path);
-                });
-            } catch (e) {
-                console.error("Failed to load messages");
+                if (messages.length === 0) {
+                    container.innerHTML = `
+                        <div class="welcome-screen" id="welcomeScreen">
+                            <h1>Hi Muhammad! How can I help you today?</h1>
+                            <p>Choose a starter prompt below or type your custom query:</p>
+                            <div class="starter-cards">
+                                <div class="starter-card" onclick="sendStarterPrompt('Explain Quantum Computing clearly with examples.')">
+                                    <h4><i class="fa-solid fa-atom" style="color: #8ab4f8;"></i> Explain Quantum Computing</h4>
+                                    <p>Learn qubits and superposition concepts.</p>
+                                </div>
+                                <div class="starter-card" onclick="sendStarterPrompt('Write a Python web scraper using BeautifulSoup.')">
+                                    <h4><i class="fa-solid fa-code" style="color: #c58af9;"></i> Python Web Scraper</h4>
+                                    <p>BeautifulSoup & requests script.</p>
+                                </div>
+                                <div class="starter-card" onclick="sendStarterPrompt('Debug machine learning model training loss spikes.')">
+                                    <h4><i class="fa-solid fa-bug" style="color: #ffb4ab;"></i> Debug ML Pipeline</h4>
+                                    <p>Optimize model training & hyperparameters.</p>
+                                </div>
+                                <div class="starter-card" onclick="sendStarterPrompt('Create a Pandas analytics template for CSV exploration.')">
+                                    <h4><i class="fa-solid fa-chart-line" style="color: #81c995;"></i> Pandas Analytics Template</h4>
+                                    <p>Data visualization workflow.</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    messages.forEach(msg => appendMessage(msg.role, msg.message, msg.file_path));
+                }
+            } catch (err) {
+                console.error("Error loading messages:", err);
             }
         }
 
-        function appendMessage(role, text, filePath = null) {
-            const container = document.getElementById("chatMessages");
-            const msgDiv = document.createElement("div");
-            msgDiv.className = `message ${role}`;
-            
-            let fileHtml = filePath ? `<br><img src="${filePath}" alt="Attachment">` : '';
-            let formattedText = text
-                .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
-                .replace(/!\[.*?\]\((.*?)\)/g, '<br><img src="$1" alt="Generated Image">');
+        function sendStarterPrompt(promptText) {
+            document.getElementById("messageInput").value = promptText;
+            sendMessage();
+        }
 
-            msgDiv.innerHTML = `
-                <div class="message-content">
-                    ${formattedText}
-                    ${fileHtml}
-                </div>
-            `;
-            container.appendChild(msgDiv);
-            container.scrollTop = container.scrollHeight;
+        function handleKeypress(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        }
+
+        function toggleWebSearch() {
+            webSearchActive = !webSearchActive;
+            const btn = document.getElementById("webSearchBtn");
+            btn.style.color = webSearchActive ? "#8ab4f8" : "#c4c7c5";
+        }
+
+        function handleFileSelect() {
+            const input = document.getElementById("fileInput");
+            if (input.files.length > 0) {
+                attachedFile = input.files[0];
+                alert(`File attached: ${attachedFile.name}`);
+            }
         }
 
         async function sendMessage() {
             const input = document.getElementById("messageInput");
-            const fileInput = document.getElementById("fileInput");
-            const message = input.value.trim();
-            const file = fileInput.files[0];
+            const text = input.value.trim();
+            if (!text && !attachedFile) return;
 
-            if (!message && !file) return;
+            const welcome = document.getElementById("welcomeScreen");
+            if (welcome) welcome.remove();
 
-            appendMessage("user", message, file ? URL.createObjectURL(file) : null);
             input.value = "";
-            fileInput.value = "";
+            let fileUrl = null;
+            if (attachedFile) {
+                fileUrl = URL.createObjectURL(attachedFile);
+            }
+
+            appendMessage("user", text, fileUrl);
 
             const formData = new FormData();
             formData.append("session_id", currentSessionId);
-            formData.append("message", message);
-            formData.append("web_search", false);
-            if (file) formData.append("file", file);
+            formData.append("message", text);
+            formData.append("web_search", webSearchActive);
+            if (attachedFile) {
+                formData.append("file", attachedFile);
+                attachedFile = null;
+            }
+
+            const assistantMsgDiv = appendMessage("assistant", "", null);
+            const contentDiv = assistantMsgDiv.querySelector(".message-content");
 
             try {
                 const response = await fetch("/chat-stream", {
                     method: "POST",
                     body: formData
                 });
-
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder();
-                let assistantMsg = "";
-                
-                const container = document.getElementById("chatMessages");
-                const msgDiv = document.createElement("div");
-                msgDiv.className = `message assistant`;
-                const contentDiv = document.createElement("div");
-                contentDiv.className = "message-content";
-                msgDiv.appendChild(contentDiv);
-                container.appendChild(msgDiv);
+                let fullText = "";
 
                 while (true) {
                     const { value, done } = await reader.read();
                     if (done) break;
-                    assistantMsg += decoder.decode(value, { stream: true });
-                    
-                    let formatted = assistantMsg
-                        .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
-                        .replace(/!\[.*?\]\((.*?)\)/g, '<br><img src="$1" alt="Generated Image">');
-                    contentDiv.innerHTML = formatted;
-                    container.scrollTop = container.scrollHeight;
+                    fullText += decoder.decode(value, { stream: true });
+                    contentDiv.innerHTML = marked.parse(fullText);
+                    scrollToBottom();
                 }
                 loadSessions();
-            } catch (e) {
-                console.error("Error sending message:", e);
+            } catch (err) {
+                contentDiv.innerText = "Error communicating with server.";
             }
+        }
+
+        function appendMessage(role, text, filePath) {
+            const container = document.getElementById("chatMessages");
+            const div = document.createElement("div");
+            div.className = `message ${role}`;
+
+            let fileHtml = "";
+            if (filePath) {
+                if (filePath.match(/\.(jpeg|jpg|gif|png)$/i)) {
+                    fileHtml = `<img src="${filePath}" alt="Attachment">`;
+                } else {
+                    fileHtml = `<p><a href="${filePath}" target="_blank" style="color: #8ab4f8;">View Attachment</a></p>`;
+                }
+            }
+
+            div.innerHTML = `
+                <div class="message-content">
+                    ${marked.parse(text || "")}
+                    ${fileHtml}
+                </div>
+            `;
+            container.appendChild(div);
+            scrollToBottom();
+            return div;
+        }
+
+        function scrollToBottom() {
+            const container = document.getElementById("chatMessages");
+            container.scrollTop = container.scrollHeight;
+        }
+
+        async function clearHistory() {
+            if (confirm("Are you sure you want to clear all history?")) {
+                await fetch("/clear-history", { method: "POST" });
+                location.reload();
+            }
+        }
+
+        function exportChatMarkdown() {
+            const messages = document.querySelectorAll(".message");
+            let md = "# Nexora AI Chat Export\n\n";
+            messages.forEach(m => {
+                const role = m.classList.contains("user") ? "**You**" : "**Nexora AI**";
+                const content = m.querySelector(".message-content").innerText;
+                md += `${role}:\n${content}\n\n---\n\n`;
+            });
+            const blob = new Blob([md], { type: "text/markdown" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "nexora_chat.md";
+            a.click();
+        }
+
+        function toggleMobileSidebar() {
+            document.getElementById("sidebar").classList.toggle("mobile-open");
         }
     </script>
 </body>
