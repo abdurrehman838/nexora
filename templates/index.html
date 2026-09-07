@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+    
         * {
             box-sizing: border-box;
             margin: 0;
@@ -16,8 +17,8 @@
         }
 
         body {
-            background-color: #121212;
-            color: #e0e0e0;
+            background-color: #131314;
+            color: #e3e3e3;
             height: 100vh;
             display: flex;
             overflow: hidden;
@@ -25,9 +26,9 @@
 
         /* Sidebar Styling */
         #sidebar {
-            width: 260px;
-            background-color: #18181b;
-            border-right: 1px solid #27272a;
+            width: 280px;
+            background-color: #1e1f20;
+            border-right: 1px solid #2e2f31;
             display: flex;
             flex-direction: column;
             transition: transform 0.3s ease;
@@ -39,62 +40,63 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 1px solid #27272a;
         }
 
         .sidebar-header h2 {
             font-size: 18px;
             color: #ffffff;
             font-weight: 600;
+            letter-spacing: 0.5px;
         }
 
         .new-chat-btn {
-            margin: 15px;
-            padding: 10px;
-            background-color: #27272a;
+            margin: 12px 16px;
+            padding: 12px;
+            background-color: #2b2c2f;
             color: #ffffff;
-            border: 1px solid #3f3f46;
-            border-radius: 8px;
+            border: 1px solid #3c3d40;
+            border-radius: 12px;
             cursor: pointer;
             font-size: 14px;
+            font-weight: 500;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
             transition: background 0.2s;
         }
 
         .new-chat-btn:hover {
-            background-color: #3f3f46;
+            background-color: #38393d;
         }
 
         .session-list {
             flex: 1;
             overflow-y: auto;
-            padding: 10px;
+            padding: 8px 12px;
         }
 
         .session-item {
-            padding: 10px 12px;
-            border-radius: 6px;
+            padding: 10px 14px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
-            color: #a1a1aa;
+            color: #c4c7c5;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
             transition: background 0.2s, color 0.2s;
         }
 
         .session-item:hover, .session-item.active {
-            background-color: #27272a;
+            background-color: #2b2c2f;
             color: #ffffff;
         }
 
         .sidebar-footer {
-            padding: 15px;
-            border-top: 1px solid #27272a;
+            padding: 16px;
+            border-top: 1px solid #2e2f31;
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -102,20 +104,28 @@
 
         .user-info {
             font-size: 13px;
-            color: #d4d4d8;
+            color: #c4c7c5;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            font-weight: 500;
         }
 
         .logout-btn {
             background: none;
             border: none;
-            color: #ef4444;
+            color: #f2b8b5;
             cursor: pointer;
             font-size: 13px;
             text-align: left;
-            padding: 5px 0;
+            padding: 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logout-btn:hover {
+            color: #ffb4ab;
         }
 
         /* Main Chat Area */
@@ -123,18 +133,19 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            background-color: #121212;
+            background-color: #131314;
             position: relative;
-            width: 100%;
+            height: 100vh;
+            overflow: hidden;
         }
 
         .chat-header {
-            padding: 15px 20px;
-            border-bottom: 1px solid #27272a;
+            padding: 16px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background-color: #18181b;
+            background-color: #131314;
+            border-bottom: 1px solid transparent;
         }
 
         .header-left {
@@ -147,28 +158,28 @@
             display: none;
             background: none;
             border: none;
-            color: #ffffff;
-            font-size: 18px;
+            color: #e3e3e3;
+            font-size: 20px;
             cursor: pointer;
         }
 
         .chat-messages {
             flex: 1;
             overflow-y: auto;
-            padding: 20px;
+            padding: 20px 24px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            max-width: 800px;
+            gap: 24px;
+            max-width: 850px;
             width: 100%;
             margin: 0 auto;
         }
 
         .message {
             display: flex;
-            gap: 15px;
-            max-width: 80% ;
-            line-height: 1.5;
+            gap: 16px;
+            max-width: 85%;
+            line-height: 1.6;
             font-size: 15px;
         }
 
@@ -178,39 +189,48 @@
         }
 
         .message-content {
-            padding: 12px 16px;
-            border-radius: 12px;
-            background-color: #27272a;
-            color: #f4f4f5;
+            padding: 14px 18px;
+            border-radius: 16px;
+            background-color: #1e1f20;
+            color: #e3e3e3;
+            border: 1px solid #2e2f31;
         }
 
         .message.user .message-content {
-            background-color: #3b82f6;
+            background-color: #004a77;
             color: #ffffff;
+            border: none;
         }
 
         .message img {
             max-width: 100%;
-            border-radius: 8px;
+            border-radius: 12px;
             margin-top: 10px;
         }
 
-        /* Input Area */
+        /* Input Area Container */
         .chat-input-container {
-            padding: 20px;
-            max-width: 800px;
+            padding: 16px 24px 24px 24px;
+            max-width: 850px;
             width: 100%;
             margin: 0 auto;
+            background: linear-gradient(180deg, rgba(19,19,20,0) 0%, #131314 40%);
         }
 
         .chat-input-box {
-            background-color: #18181b;
-            border: 1px solid #3f3f46;
-            border-radius: 12px;
-            padding: 10px 15px;
+            background-color: #1e1f20;
+            border: 1px solid #3c3d40;
+            border-radius: 16px;
+            padding: 12px 16px;
             display: flex;
             flex-direction: column;
             gap: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: border-color 0.2s;
+        }
+
+        .chat-input-box:focus-within {
+            border-color: #8ab4f8;
         }
 
         .chat-input-box textarea {
@@ -222,6 +242,7 @@
             outline: none;
             font-size: 15px;
             max-height: 150px;
+            line-height: 1.5;
         }
 
         .chat-input-actions {
@@ -232,27 +253,32 @@
 
         .action-buttons {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             align-items: center;
         }
 
         .action-btn {
             background: none;
             border: none;
-            color: #a1a1aa;
+            color: #c4c7c5;
             cursor: pointer;
             font-size: 16px;
-            padding: 5px;
-            transition: color 0.2s;
+            padding: 6px;
+            border-radius: 50%;
+            transition: background 0.2s, color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .action-btn:hover {
+            background-color: #2b2c2f;
             color: #ffffff;
         }
 
         .send-btn {
-            background-color: #d97706;
-            color: #ffffff;
+            background-color: #8ab4f8;
+            color: #131314;
             border: none;
             width: 36px;
             height: 36px;
@@ -262,20 +288,21 @@
             align-items: center;
             justify-content: center;
             transition: background 0.2s;
+            font-weight: bold;
         }
 
         .send-btn:hover {
-            background-color: #b45309;
+            background-color: #aecbfa;
         }
 
-        /* Modal Overlay for Login/Signup */
+        /* Modal Overlay */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(0, 0, 0, 0.85);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -283,65 +310,64 @@
         }
 
         .modal-card {
-            background-color: #1e1e24;
-            border: 1px solid #2d2d38;
-            padding: 30px;
-            border-radius: 16px;
+            background-color: #1e1f20;
+            border: 1px solid #2e2f31;
+            padding: 36px;
+            border-radius: 20px;
             width: 100%;
-            max-width: 400px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            max-width: 420px;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.6);
             text-align: center;
         }
 
         .modal-logo {
-            width: 60px;
-            height: 60px;
-            background-color: transparent;
-            border-radius: 12px;
-            margin: 0 auto 15px auto;
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 16px auto;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
         }
 
         .modal-logo img {
             width: 100%;
             height: 100%;
             object-fit: contain;
-            border-radius: 12px;
+            border-radius: 14px;
         }
 
         .modal-card h2 {
-            font-size: 22px;
+            font-size: 24px;
             color: #ffffff;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
+            font-weight: 600;
         }
 
         .modal-card p {
             font-size: 14px;
-            color: #9ca3af;
-            margin-bottom: 25px;
+            color: #c4c7c5;
+            margin-bottom: 24px;
         }
 
         .form-group {
             text-align: left;
-            margin-bottom: 15px;
+            margin-bottom: 16px;
         }
 
         .form-group label {
             display: block;
             font-size: 13px;
-            color: #d1d5db;
+            color: #c4c7c5;
             margin-bottom: 6px;
+            font-weight: 500;
         }
 
         .form-group input {
             width: 100%;
-            padding: 12px;
-            background-color: #121217;
-            border: 1px solid #374151;
-            border-radius: 8px;
+            padding: 12px 16px;
+            background-color: #131314;
+            border: 1px solid #3c3d40;
+            border-radius: 10px;
             color: #ffffff;
             font-size: 14px;
             outline: none;
@@ -349,35 +375,35 @@
         }
 
         .form-group input:focus {
-            border-color: #d97706;
+            border-color: #8ab4f8;
         }
 
         .modal-btn {
             width: 100%;
-            background-color: #d97706;
-            color: #ffffff;
+            background-color: #8ab4f8;
+            color: #131314;
             border: none;
             padding: 12px;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 15px;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 8px;
             transition: background-color 0.2s;
         }
 
         .modal-btn:hover {
-            background-color: #b45309;
+            background-color: #aecbfa;
         }
 
         .switch-auth {
             margin-top: 20px;
             font-size: 13px;
-            color: #9ca3af;
+            color: #c4c7c5;
         }
 
         .switch-auth a {
-            color: #d97706;
+            color: #8ab4f8;
             text-decoration: none;
             font-weight: 500;
         }
@@ -386,58 +412,51 @@
             text-decoration: underline;
         }
 
-        /* Google Button Styling */
         .google-btn {
             width: 100%;
             background-color: #ffffff;
-            color: #222222;
+            color: #1f1f1f;
             border: none;
             padding: 12px;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
             transition: background-color 0.2s;
-            margin-top: 15px;
+            margin-top: 14px;
         }
 
         .google-btn:hover {
-            background-color: #f1f1f1;
+            background-color: #f1f3f4;
         }
 
         .divider {
             display: flex;
             align-items: center;
             text-align: center;
-            color: #6b7280;
-            margin: 20px 0;
+            color: #8e918f;
+            margin: 18px 0;
             font-size: 12px;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .divider::before, .divider::after {
             content: '';
             flex: 1;
-            border-bottom: 1px solid #374151;
+            border-bottom: 1px solid #3c3d40;
         }
 
-        .divider::before {
-            margin-right: 10px;
-        }
+        .divider::before { margin-right: 12px; }
+        .divider::after { margin-left: 12px; }
 
-        .divider::after {
-            margin-left: 10px;
-        }
+        .hidden { display: none !important; }
 
-        .hidden {
-            display: none !important;
-        }
-
-        /* Mobile Responsive Media Query */
+        /* Mobile Responsive */
         @media (max-width: 768px) {
             #sidebar {
                 position: fixed;
