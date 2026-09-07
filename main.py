@@ -256,7 +256,11 @@ async def chat_stream(
                     full_response = "Error: Gemini client not initialized."
                     yield full_response
             except Exception as error:
-                full_response = f"AI Error: {str(error)}"
+                err_str = str(error)
+                if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
+                    full_response = "API rate limit reached. Please wait a minute or try using a fresh Gemini API key."
+                else:
+                    full_response = f"AI Error: {err_str}"
                 yield full_response
 
             try:
